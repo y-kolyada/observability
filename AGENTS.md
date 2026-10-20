@@ -44,7 +44,14 @@
 4. **If the tree holds another pilot's uncommitted work, do not switch branches.** Assemble the release in a separate worktree: `git worktree add /tmp/release-N prod`, `git -C /tmp/release-N merge --no-ff dev -m "release N: ..."`, `git worktree remove /tmp/release-N`.
 5. **A cut release pins the tip of `dev`:** do not rewrite that history afterwards, or the next merge adds a second, empty delivery node.
 6. **The AI never runs `git push` and never merges into `prod`.** It stops after local commits and hands control back.
-7. **Commit messages are in English** and follow the Conventional Commits format with a scope (`feat(content):`, `refactor(page):`, `fix(page):`, `chore(engine):`, `docs(record):`). **No `Co-Authored-By:` lines.**
+7. **Commit messages are in English** and follow the Conventional Commits format with an explicit scope:
+   - `feat(content):` for new chapters, question banks, and substantive text additions;
+   - `refactor(nav|page):` for restructuring navigation, headings, and cross-topic links;
+   - `fix(page|claims):` for correcting errors in markup, claims, or code snippets;
+   - `chore(engine):` for synchronized engine updates from the seed (`seed/swa/`);
+   - `chore(agents):` for rules, prompts, `AGENTS.md`, and agent orchestration policies;
+   - `docs(record):` strictly for shift delivery records (`lessons/record-N.md`).
+   **No `Co-Authored-By:` lines.**
    - **The subject** says what changed for the reader or the system in active voice, not what the pilot typed.
    - **Meaningful commits (`feat`, `refactor`, `fix`) must have a body:** 1-2 paragraphs explaining the before/after, the architectural rationale, exact measured facts (word count against the floor, exit codes, number of verified claims), and confirmation that checks are green. Empty one-liners are rejected.
 
@@ -91,3 +98,30 @@
 | **Check** | `./check.sh` | run by the machine; the eye judges meaning, not the machine |
 
 Deferred work goes to `lessons/backlog.md`. Findings that belong to the shared engine go to `lessons/notes-N.md` and travel to the seed.
+
+### 7.1. Structure of `lessons/step-N.md` (Task)
+Every step file follows four mandatory sections:
+1. **Header:** `# Задание N · <site-name>`, date, author pilot, and architect authorization statement.
+2. **Intent (`## Хочу`):** 1-2 concise paragraphs stating the user-facing goal and deliverable.
+3. **Predicates (`## Предикаты`):** strictly three machine-checkable statements:
+   - *Predicate 1 (Content):* target pages written, zero placeholder phrases, word floor met (`data-words`), two-level numbering and mobile viewport preserved.
+   - *Predicate 2 (Claims):* executable statements declared in `tools/claims.tsv` and verified green by `./tools/check-claims.sh`.
+   - *Predicate 3 (Integrity):* `git diff` within boundaries, full `./check.sh` outputs `ЗЕЛЁНОЕ` (9/9).
+4. **Boundaries (`## Границы`):** explicit numbered list of what is deliberately deferred and why not now.
+
+### 7.2. Structure of `lessons/record-N.md` (Record)
+Every record file follows six mandatory sections:
+1. **Header:** `# Запись N · <site-name> · смена YYYY-MM-DD`, shift context and pilot names.
+2. **Delivery summary (`## Что сдано`):** table `| Что | Доказательство |` linking artifacts and proof.
+3. **Predicate verification (`## Проверка предикатов задания`):** itemized machine evidence proving all three predicates from `step-N.md`.
+4. **Check output (`## Вывод ./check.sh целиком`):** full, untouched terminal output of `./check.sh`.
+5. **Commit list (`## Список коммитов смены`):** code block listing the oneline commit history of the shift.
+6. **Acceptance (`## Приёмка`):** table `| Кто | Вердикт |` left blank initially, and filled by the AI only upon Conductor's explicit approval in chat.
+
+### 7.3. Structure of `lessons/notes-N.md` (Engine notes)
+Defects or missing features in the shared engine (`assets/`, `tools/`, `check.sh`) are upstream bug reports for the seed (`seed/swa/`), not personal diaries. Every finding follows four mandatory fields:
+1. **Header:** `## N. <Short title of engine defect or missing feature>`
+2. **What (`- **Что.**`):** exact discrepancy, failure, or limitation in the shared tooling.
+3. **Proof (`- **Чем доказано.**`):** terminal command, file path, exit code, or exact error output proving the defect.
+4. **Workaround (`- **Как обойдено на сайте.**`):** local content or markup workaround without editing `tools/` or `assets/`.
+5. **Proposal (`- **Что предлагается для ростка.**`):** architectural fix to apply once in `seed/swa/` for all sites.
