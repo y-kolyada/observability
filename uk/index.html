@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Observability: Посадочная страница · sre-observability · ai|</title>
+<title>Практичний довідник-асесмент з Observability для інженера · sre-observability · ai|</title>
 <!-- meta: built by tools/build-meta.py - do not edit by hand -->
-<meta name="description" content="">
+<meta name="description" content="Довідник-асесмент зі спостережуваності та SRE для інженера: від фізики метрик, логів і трейсів до SLO, управління бюджетом помилок і ліквідації інцидентів на...">
 <link rel="canonical" href="https://y-kolyada.github.io/observability/uk/index.html">
 <link rel="alternate" hreflang="ru" href="https://y-kolyada.github.io/observability/ru/index.html">
 <link rel="alternate" hreflang="en" href="https://y-kolyada.github.io/observability/en/index.html">
@@ -14,13 +14,13 @@
 <link rel="alternate" hreflang="x-default" href="https://y-kolyada.github.io/observability/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="sre-observability">
-<meta property="og:title" content="Observability: Посадочная страница">
-<meta property="og:description" content="">
+<meta property="og:title" content="Практичний довідник-асесмент з Observability для інженера">
+<meta property="og:description" content="Довідник-асесмент зі спостережуваності та SRE для інженера: від фізики метрик, логів і трейсів до SLO, управління бюджетом помилок і ліквідації інцидентів на...">
 <meta property="og:url" content="https://y-kolyada.github.io/observability/uk/index.html">
 <meta property="og:locale" content="uk_UA">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"sre-observability","url":"https://y-kolyada.github.io/observability/","inLanguage":"uk","description":""}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"sre-observability","url":"https://y-kolyada.github.io/observability/","inLanguage":"uk","description":"Довідник-асесмент зі спостережуваності та SRE для інженера: від фізики метрик, логів і трейсів до SLO, управління бюджетом помилок і ліквідації інцидентів на..."}</script>
 <!-- /meta -->
 <link rel="stylesheet" href="../assets/style.css?v=1">
 <script>
@@ -35,7 +35,6 @@
 </head>
 <body>
 <a class="skip" href="#main">До змісту</a>
-<div class="wrap">
 
 <header class="top">
   <div class="brand-group">
@@ -43,21 +42,21 @@
       <span class="badge-ai">ai|</span>
       <span class="sub-brand">sre-observability</span>
     </a>
-    <div class="three" aria-hidden="true">инструменты · <span class="topic">Observability</span> · практика · 150 вопросов</div>
+    <div class="three" aria-hidden="true">інструменти · <span class="topic">Observability</span> · практика · 150 питань</div>
   </div>
-  <div class="utility-tray" role="toolbar" aria-label="Anzeigeeinstellungen und Sprache">
+  <div class="utility-tray" role="toolbar" aria-label="Налаштування відображення та мова">
     <nav class="lang-switcher" aria-label="Мова сторінки">
       <a href="../en/index.html" lang="en" hreflang="en" aria-label="English">EN</a>
       <a href="../ru/index.html" lang="ru" hreflang="ru" aria-label="Русский">RU</a>
       <a href="index.html" lang="uk" hreflang="uk" aria-label="Українська" class="active" aria-current="page">UK</a>
       <a href="../de/index.html" lang="de" hreflang="de" aria-label="Deutsch">DE</a>
     </nav>
-    <div class="font-scaler" role="group" aria-label="Schriftgröße">
-      <button type="button" class="font-btn font-s" data-size="s" title="Kleine Schrift" aria-label="Kleine Schrift">A</button>
-      <button type="button" class="font-btn font-m active" data-size="m" title="Standardschrift" aria-label="Standardschrift">A</button>
-      <button type="button" class="font-btn font-l" data-size="l" title="Große Schrift" aria-label="Große Schrift">A</button>
+    <div class="font-scaler" role="group" aria-label="Розмір шрифту">
+      <button type="button" class="font-btn font-s" data-size="s" title="Дрібний шрифт" aria-label="Дрібний шрифт">A</button>
+      <button type="button" class="font-btn font-m active" data-size="m" title="Звичайний шрифт" aria-label="Звичайний шрифт">A</button>
+      <button type="button" class="font-btn font-l" data-size="l" title="Великий шрифт" aria-label="Великий шрифт">A</button>
     </div>
-    <button type="button" class="theme-toggle" id="themeToggle" title="Thema wechseln (Tag/Nacht)" aria-label="Thema Tag/Nacht wechseln">
+    <button type="button" class="theme-toggle" id="themeToggle" title="Змінити тему (день/ніч)" aria-label="Змінити тему день/ніч">
       <span class="theme-icon" aria-hidden="true"><svg class="icon" data-icon="sun" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="3.8"/><path d="M10 1.2v2.2M10 16.6v2.2M1.2 10h2.2M16.6 10h2.2M3.7 3.7l1.6 1.6M14.7 14.7l1.6 1.6M16.3 3.7l-1.6 1.6M5.3 14.7l-1.6 1.6"/></svg></span>
     </button>
   </div>
@@ -65,49 +64,153 @@
 
 <div class="cols">
 
-  <nav class="contents" aria-label="Bereiche der Website">
+  <nav class="contents" aria-label="Розділи сайту">
     <ol>
-      <li><a href="01.html"><span class="num">1</span>Наблюдаемость и мониторинг</a></li>
+      <li><a href="01.html"><span class="num">1</span>Спостережуваність і моніторинг</a></li>
       <li><a href="02.html"><span class="num">2</span>Метрики</a></li>
       <li><a href="03.html"><span class="num">3</span>Логи</a></li>
-      <li><a href="04.html"><span class="num">4</span>Трассировки</a></li>
-      <li><a href="05.html"><span class="num">5</span>Три сигнала вместе</a></li>
-      <li><a href="06.html"><span class="num">6</span>Сбор и доставка</a></li>
-      <li><a href="07.html"><span class="num">7</span>SLI и SLO</a></li>
-      <li><a href="08.html"><span class="num">8</span>Тревоги и алерты</a></li>
-      <li><a href="09.html"><span class="num">9</span>Дежурство и инциденты</a></li>
-      <li><a href="10.html"><span class="num">10</span>Примеры · Noob</a></li>
-      <li><a href="11.html"><span class="num">11</span>Примеры · Pro</a></li>
-      <li><a href="12.html"><span class="num">12</span>Примеры · IGL</a></li>
-      <li><a href="13.html"><span class="num">13</span>Вопросы · Noob</a></li>
-      <li><a href="14.html"><span class="num">14</span>Вопросы · Pro</a></li>
-      <li><a href="15.html"><span class="num">15</span>Вопросы · IGL</a></li>
+      <li><a href="04.html"><span class="num">4</span>Трасування</a></li>
+      <li><a href="05.html"><span class="num">5</span>Три сигнали разом</a></li>
+      <li><a href="06.html"><span class="num">6</span>Збір та доставка</a></li>
+      <li><a href="07.html"><span class="num">7</span>SLI та SLO</a></li>
+      <li><a href="08.html"><span class="num">8</span>Тривоги та алерти</a></li>
+      <li><a href="09.html"><span class="num">9</span>Чергування та інциденти</a></li>
+      <li><a href="10.html"><span class="num">10</span>Приклади · Noob</a></li>
+      <li><a href="11.html"><span class="num">11</span>Приклади · Pro</a></li>
+      <li><a href="12.html"><span class="num">12</span>Приклади · IGL</a></li>
+      <li><a href="13.html"><span class="num">13</span>Питання · Noob</a></li>
+      <li><a href="14.html"><span class="num">14</span>Питання · Pro</a></li>
+      <li><a href="15.html"><span class="num">15</span>Питання · IGL</a></li>
     </ol>
-        <div class="nav-extra">
-      <a href="glossary.html"><svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg> Словник понять</a>
-      <a href="navigator.html"><svg class="icon" data-icon="target" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="10" r="0.7" fill="currentColor"/></svg> Навігатор</a>
+    <div class="nav-extra">
+      <div><a href="glossary.html"><svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg> Словник понять</a></div>
+      <div><a href="navigator.html"><svg class="icon" data-icon="target" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="10" r="0.7" fill="currentColor"/></svg> Навігатор</a></div>
     </div>
-    <div class="page-toc" id="pageToc" aria-label="Abschnitte dieser Seite" hidden>
+    <div class="page-toc" id="pageToc" aria-label="Розділи цієї сторінки" hidden>
       <ul class="toc-list" id="tocList"></ul>
     </div>
   </nav>
 
   <main id="main">
-    <h1>Observability: Посадочная страница</h1>
-    <p class="page-size" data-words="23">Слів: 23</p>
+    <h1>Практичний довідник-асесмент з Observability для інженера</h1>
+    <p class="page-size" data-words="1485">Слів: 1485</p>
+    <p class="lead">Довідник-асесмент зі спостережуваності та SRE для інженера: від фізики метрик, логів і трейсів до SLO, управління бюджетом помилок і ліквідації інцидентів на проді.</p>
 
-    <div class="stub-card">
-      <h2>Українська версія готується</h2>
-      <p>Повна робоча версія цієї сторінки опублікована руською мовою.</p>
-      <p>Відкрити повну версію:</p>
-      <div class="stub-actions">
-        <a href="../ru/index.html" class="btn-primary">Практический справочник-ассессмент по Observability для инженера →</a>
-      </div>
+    <div class="box key" id="key-idea">
+      <h3>Головна думка сайту <a class="anchor-link" href="#key-idea" aria-label="Посилання на цей блок">#</a></h3>
+      <p>Складні розподілені системи ніколи не ламаються просто так: вони деградують непомітно, каскадно і в найбільш неочікуваних вузлах. Традиційний моніторинг десятиліттями вчив інженерів збирати статичні метрики серверів і малювати багатоекранні дашборди з десятками графіків навантаження процесора, оперативної пам'яті та дискового простору. Під час аварій чергові інженери гіпнотизували зелено-червоні індикатори, намагаючись вгадати за непрямими ознаками, чому користувачі отримують 500-ті помилки, тоді як усі графіки інфраструктури демонструють зразкове здоров'я. Такий підхід працював в епоху монолітів на виділених серверах, але зазнав повного фіаско у світі мікросервісів, безсерверних обчислень і динамічних контейнерних кластерів.</p>
+      <p>Фундаментальна різниця між класичним моніторингом і спостережуваністю (Observability) лежить у площині теорії управління та характеру запитань, що ставляться до системи. Моніторинг перевіряє відомі невідомі (known unknowns): заздалегідь налаштовані порогові перевірки, пінги та лічильники, про поведінку яких інженер подумав ще до релізу. Спостережуваність - це здатність системи пояснити невідомі невідомі (unknown unknowns): відповісти на будь-яке довільне запитання про свій внутрішній стан виключно на основі зовнішніх телеметричних даних (метрик, структурованих логів, розподілених трейсів і профілів виконання) без необхідності змінювати вихідний код, збирати нові бінарники або перезапускати сервіси в розпал інциденту.</p>
+      <p>Цей сайт створений як практичний посібник для інженерів, які прагнуть перейти від інтуїтивного ворожіння на графіках до суворої інженерної дисципліни SRE (Site Reliability Engineering). Ми послідовно розбираємо фізику та математику кожного телеметричного сигналу, розкриваємо природу каскадних збоїв, вчимо правильно формулювати цілі рівня обслуговування (SLO) та керувати бюджетом помилок (Error Budget). Матеріал структурований за трьома рівнями професійної зрілості: Noob, Pro, IGL. Тут немає переказу маркетингових брошур і абстрактної філософії: кожне правило, формула та архітектурна рекомендація або рятують доступність вашого сервісу та бюджет компанії, або їх тут немає.</p>
     </div>
+
+    <h2 id="structure">Що є на цьому сайті <a class="anchor-link" href="#structure">#</a></h2>
+    <p>Курс розділений на п'ятнадцять послідовних розділів, розбитих на фундаментальну теорію, архітектурні конвеєри, бойові практичні сценарії та кваліфікаційні банки питань, доповнені двома наскрізними інженерними інструментами.</p>
+
+    <h3>Фундамент та анатомія сигналів (глави 01–05)</h3>
+    <ol>
+      <li><strong><a href="01.html">Спостережуваність і моніторинг</a></strong><br>
+      Архітектурний вододіл: чому порогового моніторингу недостатньо в розподілених архітектурах. Поняття телеметрії, подій, сигналів, кардинальності даних і вартості їх збору. Як спостережуваність перетворює зневадження з пошуку голки в сіні на структурований аналітичний процес.</li>
+      <li><strong><a href="02.html">Метрики</a></strong><br>
+      Математика числових часових рядів: типи даних (Counter, Gauge, Histogram, Summary). Чому середнє арифметичне (average) категорично вводить в оману інженерів і приховує катастрофічний досвід користувачів, і як квантилі та процентилі (p50, p90, p99) розкривають реальну поведінку хвоста розподілу затримок. Основи PromQL та архітектура сховищ TSDB.</li>
+      <li><strong><a href="03.html">Логи</a></strong><br>
+      Еволюція від неструктурованого тексту до структурованого JSON-логування. Збагачення контекстом: пов'язування записів з ідентифікаторами трасування (trace ID, span ID), сервісами та клієнтами. Стратегії індексації, економіка зберігання, стиснення та конвеєри розбору.</li>
+      <li><strong><a href="04.html">Трасування</a></strong><br>
+      Механіка розподіленого трасування: спани, трейси, ациклічні графи (DAG), батьківсько-дочірні зв'язки та стандарти поширення контексту (W3C TraceContext). Аналіз каскадних затримок у мікросервісних ланцюжках, виявлення мережевих плям і методи семплювання (head-based та tail-based).</li>
+      <li><strong><a href="05.html">Три сигнали разом</a></strong><br>
+      Кореляція тріади сигналів: як метрики активують алерти, трасування локалізує проблемний виклик, а контекстні логи пояснюють першопричину збою. Екземпляри (Exemplars). Моделі RED (Rate, Errors, Duration) для сервісів та USE (Utilization, Saturation, Errors) для ресурсів інфраструктури.</li>
+    </ol>
+
+    <h3>Конвеєри, надійність та практики SRE (глави 06–09)</h3>
+    <ol start="6">
+      <li><strong><a href="06.html">Збір та доставка</a></strong><br>
+      Архітектура конвеєрів обробки телеметрії: OpenTelemetry Collector, механізм контролю пам'яті (memory-limiter), пакетування (batching), буферизація, повторні спроби та обмеження швидкості. Моделі збору Pull проти Push, топології агентів і захист систем моніторингу від штормів телеметрії.</li>
+      <li><strong><a href="07.html">SLI та SLO</a></strong><br>
+      Основи Site Reliability Engineering: визначення орієнтованих на користувача індикаторів рівня обслуговування (SLI), встановлення реалістичних цілей (SLO) та розрахунок бюджету помилок (Error Budget). Переведення технічних параметрів у площину бізнес-домовленостей та контроль релізів.</li>
+      <li><strong><a href="08.html">Тривоги та алерти</a></strong><br>
+      Боротьба зі втомою від сповіщень (Alert Fatigue): чому алерти повинні сигналізувати про симптоми впливу на клієнтів, а не про внутрішні причини. Алгоритми сповіщень за швидкістю згоряння бюджету помилок у кількох вікнах (Multiwindow Multi-Burn-Rate) без хибних спрацьовувань.</li>
+      <li><strong><a href="09.html">Чергування та інциденти</a></strong><br>
+      Життєвий цикл виробничої аварії: первинний тріаж, локалізація шкоди, комунікація та усунення. Роль керівника інциденту (Incident Commander). Проведення розборів польотів без вини (Blameless Postmortems) і впровадження превентивних заходів.</li>
+    </ol>
+
+    <h3>Практичні бойові сценарії (глави 10–12)</h3>
+    <ol start="10">
+      <li><strong><a href="10.html">Приклади · Noob</a></strong><br>
+      Сім базових інженерних рецептів: налаштування SDK OpenTelemetry, структурування JSON-логів з ідентифікаторами запитів, розрахунок 95-го процентиля в PromQL, базова конфігурація правил Alertmanager та розгортання локального агента.</li>
+      <li><strong><a href="11.html">Приклади · Pro</a></strong><br>
+      Сім командних сценаріїв: правила багатооконного моніторингу вигоряння бюджету помилок, конвеєри хвостового семплювання для збереження 100% помилок за 95% економії трафіку, захист TSDB від високої кардинальності та автоматична канареечна валідація.</li>
+      <li><strong><a href="12.html">Приклади · IGL</a></strong><br>
+      Сім архітектурних рішень системного лідерства: проєктування мультирегіональних сховищ телеметрії, автоматичне спрацьовування автоматичних запобіжників (circuit breakers) за швидкістю згоряння бюджету, міжкластерна кореляція та відмовостійкі пайплайни.</li>
+    </ol>
+
+    <h3>Банк кваліфікаційних питань (глави 13–15)</h3>
+    <ol start="13">
+      <li><strong><a href="13.html">Питання · Noob</a></strong><br>
+      П'ятдесят кваліфікаційних питань для старту в культурі Observability: базові типи метрик, формати логів, основи контексту трасування, цілі моніторингу та базові PromQL-запити.</li>
+      <li><strong><a href="14.html">Питання · Pro</a></strong><br>
+      П'ятдесят питань командного рівня: бакети гістограм, парсинг заголовків W3C traceparent, тиск у конвеєрах (backpressure), математика Multi-Burn-Rate і оптимізація сховищ.</li>
+      <li><strong><a href="15.html">Питання · IGL</a></strong><br>
+      П'ятдесят питань архітектурного лідерства: FinOps телеметрії, ієрархія командування на аваріях, запобігання каскадним збоям та дизайн загальнокорпоративних платформ надійності.</li>
+    </ol>
+
+    <h3>Наскрізні інженерні інструменти</h3>
+    <ul>
+      <li><strong><a href="glossary.html">Словник понять</a>:</strong> 24 канонічні терміни, що охоплюють сигнали, конвеєри збору та практики надійності SRE, з перехресними посиланнями на всі розділи курсу.</li>
+      <li><strong><a href="navigator.html">Навігатор інженера</a>:</strong> Скрізна аналітична матриця за 9 канонічними інженерними лінзами (Компоненти, Код, Сила, Слабкості, Зв'язки, AI-контекст, Хмара, DevOps, SRE) для системного огляду предметної області.</li>
+    </ul>
+
+    <h2 id="levels">Три рівні зрілості, і навіщо вони розділені <a class="anchor-link" href="#levels">#</a></h2>
+    <p>Інженерія спостережуваності - це не просто набір утиліт командного рядка, а системна культура управління ризиками. Матеріал курсу структурований за трирівневою шкалою майстерності:</p>
+    <ul>
+      <li><strong>Noob (Початківець):</strong> Опановує базовий синтаксис, типи метрик і правила гігієни телеметрії. Мета - подолати страх перед невідомими інструментами CLI і налаштувати коректний збір даних без ризику покласти сервіс.</li>
+      <li><strong>Pro (Професіонал):</strong> Ефективно працює в розподіленій команді. Робить фокус на автоматичній кореляції сигналів, контролі кардинальності, хвостовому семплюванні та налаштуванні дієвих Multi-Burn-Rate сповіщень.</li>
+      <li><strong>IGL (In-Game Leader / Технічний лідер):</strong> Володіє повним архітектурним баченням систем і команд. Встановлює загальносистемні SLO, керує регламентами ліквідації аварій і визначає політику витрачання бюджету помилок.</li>
+    </ul>
+
+    <div class="box key">
+      <h3>Еволюція кваліфікаційної відповіді на прикладі затримок БД <a class="anchor-link" href="#levels" aria-label="Посилання на цей блок">#</a></h3>
+      <p>Порівняйте, як спеціалісти різного рівня відповідають на запитання співбесіди: <em>«Затримка запитів до бази даних зросла з 15мс до 850мс, викликавши каскадні тайм-аути у мікросервісах. Як ви будете діяти?»</em></p>
+      <p><strong>Відповідь Noob:</strong> «Я підключуся по SSH до сервера бази даних, подивлюся утилітами <code>top</code> та <code>iotop</code> навантаження на процесор і диски. Потім відкрию slow query log, щоб знайти повільні запити, і попрошу розробників додати потрібні індекси».</p>
+      <p><strong>Відповідь Pro:</strong> «Спочатку я перевірю метрику p99 затримки в Prometheus, щоб зрозуміти, чи страждають усі запити, чи лише окремі маршрути. Потім відкрию розподілені трейси в Jaeger/Tempo з фільтром <code>status_code=500</code> та тривалістю понад 500мс для аналізу спана клієнта бази даних. З'ясую, чи проблема у вичерпанні пулу з'єднань, чи в блокуваннях таблиць, і перевірю за Exemplar, чи не пов'язаний сплеск із новим запитом у нещодавньому релізі».</p>
+      <p><strong>Відповідь IGL:</strong> «Я розділяю дії на три паралельні потоки. Перший (локалізація збитку): даю команду активувати circuit breakers і перевести сервіси на безпечну деградацію, знявши паразитичне навантаження з бази даних. Другий (управління інцидентом): призначаю чергового інженера на розбір трейсу, а комунікатора - готувати статус для клієнтів і бізнесу. Третій (системна профілактика): після завершення аварії вимагаю впровадження суворих клієнтських тайм-аутів з експоненційним відкочуванням і джитером, налаштування лімітів пулів з'єднань та включення Multi-Burn-Rate алертів, щоб подібні аномалії виявлялися системою до того, як вони зачеплять користувачів».</p>
+    </div>
+
+    <h2 id="features">Особливості та можливості цього сайту <a class="anchor-link" href="#features">#</a></h2>
+    <p>Сайт побудований у суворій відповідності до концепції Simple Web Architecture: він гарантує максимальну швидкість роботи, бездоганну читабельність на будь-яких пристроях і повну незалежність від зовнішніх серверів.</p>
+    <ul>
+      <li><strong>Миттєвий локальний пошук:</strong> Рядок пошуку у верхній панелі миттєво сканує всі теми, терміни та питання безпосередньо в браузері без відправки запитів до мережі.</li>
+      <li><strong>Інтерактивні картки термінів:</strong> Ключові концепції SRE та спостережуваності мають пунктирне підкреслення. Клік по терміну відкриває тултип із точним визначенням і посиланням на статтю у словнику.</li>
+      <li><strong>Синхронна підтримка чотирьох мов:</strong> Перемикання між англійською, руською, українською та німецькою мовами відбувається без втрати поточного розділу та позиції читання.</li>
+      <li><strong>Зручна типографіка:</strong> Підтримка світлої та темної тем оформлення, масштабування шрифту з автоматичним збереженням вибору в локальному сховищі браузера.</li>
+      <li><strong>Швидке копіювання коду:</strong> Кожен блок конфігурації OpenTelemetry, PromQL-запит або скрипт містить зручну кнопку копіювання в буфер обміну.</li>
+      <li><strong>Машинна верифікація всіх тверджень:</strong> Кожна математична формула, приклад парсингу логу та правило поширення контексту регулярно перевіряються автоматичними тестами у CI.</li>
+      <li><strong>Повна автономність:</strong> Весь сайт бездоганно працює без інтернету, збирачів і сторонніх фреймворків, відкриваючись локально за протоколом <code>file://</code>.</li>
+    </ul>
+
+    <div class="box key" id="artifacts">
+      <h2>Артефакти: що ви маєте після цієї сторінки <a class="anchor-link" href="#artifacts">#</a></h2>
+      <p class="artifacts-slogan">Читання &gt;&gt; Ваш квант часу життя · Партнерство гідності разом з AI · Перебудова вашої нейромережі</p>
+      <p>Час та увага інженера - непоправний ресурс. Ми дбаємо про те, щоб кожна сторінка курсу формувала надійну ментальну модель і практичні навички, які залишаються з вами назавжди. Ознайомившись із матеріалами цієї сторінки, ви отримуєте:</p>
+      <ol>
+        <li><strong>Цілісну ментальну карту Observability:</strong> Чітке розуміння меж застосування метрик, логів і трейсів, а також навігаційну структуру для швидкого пошуку рішень під час бойових чергувань.</li>
+        <li><strong>Професійну шкалу Noob / Pro / IGL:</strong> Вичерпні критерії оцінки власної інженерної кваліфікації та розуміння зон зростання для успішного проходження технічних співбесід на позиції Senior SRE / Tech Lead.</li>
+        <li><strong>Статистичне розуміння розподілу затримок:</strong> Свідому відмову від орієнтації на середні значення на користь аналізу процентилів і гістограм розподілу.</li>
+        <li><strong>Культуру управління надійністю через бюджет помилок:</strong> Перехід від суб'єктивних суперечок про стабільність до суворої метричної оцінки допустимого ризику.</li>
+      </ol>
+    </div>
+  
+
+    <footer>
+      <nav class="pager" aria-label="Сусідні теми">
+        <p class="pager-next">Наступна тема: <a href="01.html">Наблюдаемость и мониторинг</a></p>
+      </nav>
+      <p class="footer-note">Сайт серії AI Factory. Зроблений тим самим оснащенням: звичайний HTML і CSS, перевірка на bash, публікація через GitHub Pages.</p>
+    </footer>
   </main>
 
 </div>
 </div>
 <script src="../assets/swa.js?v=1"></script>
+<script src="../assets/terms.js?v=1"></script>
+<script src="../assets/cp.js?v=1"></script>
 </body>
 </html>

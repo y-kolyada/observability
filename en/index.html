@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Observability: Посадочная страница · sre-observability · ai|</title>
+<title>Practical Assessment Reference Manual on Observability for Engineers · sre-observability · ai|</title>
 <!-- meta: built by tools/build-meta.py - do not edit by hand -->
-<meta name="description" content="">
+<meta name="description" content="An assessment reference manual on Observability and SRE for engineers: from the fundamental physics of metrics, logs, and traces to SLOs, error budget...">
 <link rel="canonical" href="https://y-kolyada.github.io/observability/en/index.html">
 <link rel="alternate" hreflang="ru" href="https://y-kolyada.github.io/observability/ru/index.html">
 <link rel="alternate" hreflang="en" href="https://y-kolyada.github.io/observability/en/index.html">
@@ -14,13 +14,13 @@
 <link rel="alternate" hreflang="x-default" href="https://y-kolyada.github.io/observability/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="sre-observability">
-<meta property="og:title" content="Observability: Посадочная страница">
-<meta property="og:description" content="">
+<meta property="og:title" content="Practical Assessment Reference Manual on Observability for Engineers">
+<meta property="og:description" content="An assessment reference manual on Observability and SRE for engineers: from the fundamental physics of metrics, logs, and traces to SLOs, error budget...">
 <meta property="og:url" content="https://y-kolyada.github.io/observability/en/index.html">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"sre-observability","url":"https://y-kolyada.github.io/observability/","inLanguage":"en","description":""}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"sre-observability","url":"https://y-kolyada.github.io/observability/","inLanguage":"en","description":"An assessment reference manual on Observability and SRE for engineers: from the fundamental physics of metrics, logs, and traces to SLOs, error budget..."}</script>
 <!-- /meta -->
 <link rel="stylesheet" href="../assets/style.css?v=1">
 <script>
@@ -35,7 +35,6 @@
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<div class="wrap">
 
 <header class="top">
   <div class="brand-group">
@@ -43,21 +42,21 @@
       <span class="badge-ai">ai|</span>
       <span class="sub-brand">sre-observability</span>
     </a>
-    <div class="three" aria-hidden="true">инструменты · <span class="topic">Observability</span> · практика · 150 вопросов</div>
+    <div class="three" aria-hidden="true">tools · <span class="topic">Observability</span> · practice · 150 questions</div>
   </div>
-  <div class="utility-tray" role="toolbar" aria-label="Anzeigeeinstellungen und Sprache">
+  <div class="utility-tray" role="toolbar" aria-label="Display settings and language">
     <nav class="lang-switcher" aria-label="Page language">
       <a href="index.html" lang="en" hreflang="en" aria-label="English" class="active" aria-current="page">EN</a>
       <a href="../ru/index.html" lang="ru" hreflang="ru" aria-label="Русский">RU</a>
       <a href="../uk/index.html" lang="uk" hreflang="uk" aria-label="Українська">UK</a>
       <a href="../de/index.html" lang="de" hreflang="de" aria-label="Deutsch">DE</a>
     </nav>
-    <div class="font-scaler" role="group" aria-label="Schriftgröße">
-      <button type="button" class="font-btn font-s" data-size="s" title="Kleine Schrift" aria-label="Kleine Schrift">A</button>
-      <button type="button" class="font-btn font-m active" data-size="m" title="Standardschrift" aria-label="Standardschrift">A</button>
-      <button type="button" class="font-btn font-l" data-size="l" title="Große Schrift" aria-label="Große Schrift">A</button>
+    <div class="font-scaler" role="group" aria-label="Font size">
+      <button type="button" class="font-btn font-s" data-size="s" title="Small text" aria-label="Small text">A</button>
+      <button type="button" class="font-btn font-m active" data-size="m" title="Default text" aria-label="Default text">A</button>
+      <button type="button" class="font-btn font-l" data-size="l" title="Large text" aria-label="Large text">A</button>
     </div>
-    <button type="button" class="theme-toggle" id="themeToggle" title="Thema wechseln (Tag/Nacht)" aria-label="Thema Tag/Nacht wechseln">
+    <button type="button" class="theme-toggle" id="themeToggle" title="Switch theme (day/night)" aria-label="Switch theme day/night">
       <span class="theme-icon" aria-hidden="true"><svg class="icon" data-icon="sun" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="3.8"/><path d="M10 1.2v2.2M10 16.6v2.2M1.2 10h2.2M16.6 10h2.2M3.7 3.7l1.6 1.6M14.7 14.7l1.6 1.6M16.3 3.7l-1.6 1.6M5.3 14.7l-1.6 1.6"/></svg></span>
     </button>
   </div>
@@ -65,49 +64,153 @@
 
 <div class="cols">
 
-  <nav class="contents" aria-label="Bereiche der Website">
+  <nav class="contents" aria-label="Site sections">
     <ol>
-      <li><a href="01.html"><span class="num">1</span>Наблюдаемость и мониторинг</a></li>
-      <li><a href="02.html"><span class="num">2</span>Метрики</a></li>
-      <li><a href="03.html"><span class="num">3</span>Логи</a></li>
-      <li><a href="04.html"><span class="num">4</span>Трассировки</a></li>
-      <li><a href="05.html"><span class="num">5</span>Три сигнала вместе</a></li>
-      <li><a href="06.html"><span class="num">6</span>Сбор и доставка</a></li>
-      <li><a href="07.html"><span class="num">7</span>SLI и SLO</a></li>
-      <li><a href="08.html"><span class="num">8</span>Тревоги и алерты</a></li>
-      <li><a href="09.html"><span class="num">9</span>Дежурство и инциденты</a></li>
-      <li><a href="10.html"><span class="num">10</span>Примеры · Noob</a></li>
-      <li><a href="11.html"><span class="num">11</span>Примеры · Pro</a></li>
-      <li><a href="12.html"><span class="num">12</span>Примеры · IGL</a></li>
-      <li><a href="13.html"><span class="num">13</span>Вопросы · Noob</a></li>
-      <li><a href="14.html"><span class="num">14</span>Вопросы · Pro</a></li>
-      <li><a href="15.html"><span class="num">15</span>Вопросы · IGL</a></li>
+      <li><a href="01.html"><span class="num">1</span>Observability and Monitoring</a></li>
+      <li><a href="02.html"><span class="num">2</span>Metrics</a></li>
+      <li><a href="03.html"><span class="num">3</span>Logs</a></li>
+      <li><a href="04.html"><span class="num">4</span>Traces</a></li>
+      <li><a href="05.html"><span class="num">5</span>Three Signals Together</a></li>
+      <li><a href="06.html"><span class="num">6</span>Collection and Delivery</a></li>
+      <li><a href="07.html"><span class="num">7</span>SLI and SLO</a></li>
+      <li><a href="08.html"><span class="num">8</span>Alerts and Alarms</a></li>
+      <li><a href="09.html"><span class="num">9</span>On-Call and Incidents</a></li>
+      <li><a href="10.html"><span class="num">10</span>Examples · Noob</a></li>
+      <li><a href="11.html"><span class="num">11</span>Examples · Pro</a></li>
+      <li><a href="12.html"><span class="num">12</span>Examples · IGL</a></li>
+      <li><a href="13.html"><span class="num">13</span>Questions · Noob</a></li>
+      <li><a href="14.html"><span class="num">14</span>Questions · Pro</a></li>
+      <li><a href="15.html"><span class="num">15</span>Questions · IGL</a></li>
     </ol>
-        <div class="nav-extra">
-      <a href="glossary.html"><svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg> Glossary</a>
-      <a href="navigator.html"><svg class="icon" data-icon="target" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="10" r="0.7" fill="currentColor"/></svg> Navigator</a>
+    <div class="nav-extra">
+      <div><a href="glossary.html"><svg class="icon" data-icon="book" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 3.8h4.8a2.6 2.6 0 0 1 2.6 2.6v10a2.2 2.2 0 0 0-2.2-1.8H2.6z"/><path d="M17.4 3.8h-4.8a2.6 2.6 0 0 0-2.6 2.6v10a2.2 2.2 0 0 1 2.2-1.8h5.2z"/></svg> Glossary</a></div>
+      <div><a href="navigator.html"><svg class="icon" data-icon="target" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="10" r="0.7" fill="currentColor"/></svg> Navigator</a></div>
     </div>
-    <div class="page-toc" id="pageToc" aria-label="Abschnitte dieser Seite" hidden>
+    <div class="page-toc" id="pageToc" aria-label="Sections on this page" hidden>
       <ul class="toc-list" id="tocList"></ul>
     </div>
   </nav>
 
   <main id="main">
-    <h1>Observability: Посадочная страница</h1>
-    <p class="page-size" data-words="30">Words: 30</p>
+    <h1>Practical Assessment Reference Manual on Observability for Engineers</h1>
+    <p class="page-size" data-words="1536">Words: 1536</p>
+    <p class="lead">An assessment reference manual on Observability and SRE for engineers: from the fundamental physics of metrics, logs, and traces to SLOs, error budget governance, and high-stakes production incident triage.</p>
 
-    <div class="stub-card">
-      <h2>The English version is in preparation</h2>
-      <p>The full working version of this page is published in Russian.</p>
-      <p>Open the full version:</p>
-      <div class="stub-actions">
-        <a href="../ru/index.html" class="btn-primary">Практический справочник-ассессмент по Observability для инженера →</a>
-      </div>
+    <div class="box key" id="key-idea">
+      <h3>Core Idea of the Site <a class="anchor-link" href="#key-idea" aria-label="Link to this section">#</a></h3>
+      <p>Modern distributed systems rarely fail in clean, predictable ways: they degrade invisibly, cascade across boundaries, and unravel at unexpected bottlenecks. For decades, legacy monitoring taught operations teams to poll static server metrics and stare at multi-screen dashboards packed with CPU, memory, and disk utilization graphs. When catastrophic outages occurred, on-call responders hypnotized glowing green and red indicators, struggling to deduce why users were encountering 500 errors while every infrastructure dashboard showed pristine health. This primitive approach worked well enough for single-node monolithic servers, but it has completely failed in the era of microservices, serverless workloads, and dynamic containerized topologies.</p>
+      <p>The foundational distinction between traditional monitoring and modern Observability stems from control theory and the nature of the questions being asked. Monitoring verifies known unknowns: pre-configured threshold triggers, heartbeats, and counters that engineers anticipated prior to deployment. Observability is the capability of a system to explain unknown unknowns: to answer any arbitrary question regarding internal system states strictly through external telemetry data (metrics, structured logs, distributed traces, and continuous profiling) without modifying application code, rebuilding binaries, or restarting services in the midst of an outage.</p>
+      <p>This reference site is engineered as a battle-tested manual for practitioners who want to elevate their engineering practice from dashboard superstition to rigorous Site Reliability Engineering (SRE). We systematically unpack the mathematics and mechanics of every telemetry signal, dissect the anatomy of cascading failures, formulate actionable Service Level Objectives (SLOs), and establish strict Error Budget governance. Every chapter, formula, and architectural blueprint is organized across a three-tier professional ladder: Noob, Pro, and IGL. There is no marketing fluff here: every pattern and rule either protects service availability and infrastructure budgets, or it is deliberately excluded.</p>
     </div>
+
+    <h2 id="structure">What This Site Holds <a class="anchor-link" href="#structure">#</a></h2>
+    <p>The course is structured into fifteen focused chapters grouped into foundational theory, architectural pipelines, real-world troubleshooting scenarios, and interview qualification banks, complemented by two transversal engineering companions.</p>
+
+    <h3>Telemetry Foundations and Signal Anatomy (Chapters 01–05)</h3>
+    <ol>
+      <li><strong><a href="01.html">Observability and Monitoring</a></strong><br>
+      The architectural boundary: why static threshold alerting fails in distributed systems. Fundamental definitions of telemetry, events, signals, high cardinality, and telemetry cost models. How observability transforms troubleshooting from searching for a needle in a haystack into a structured analytical inquiry.</li>
+      <li><strong><a href="02.html">Metrics</a></strong><br>
+      The mathematics of numeric time-series: telemetry types (Counter, Gauge, Histogram, Summary). Why the arithmetic average actively deceives engineers and hides degraded user experiences, and how quantiles and percentiles (p50, p90, p99) uncover latency tail anomalies. Core PromQL and TSDB storage mechanics.</li>
+      <li><strong><a href="03.html">Logs</a></strong><br>
+      Evolution from unparsed text streams to structured JSON logging. Context injection: linking log records with trace IDs, span IDs, service identifiers, and user contexts. Indexing strategies, log storage economics, compression, and log parsing pipelines.</li>
+      <li><strong><a href="04.html">Traces</a></strong><br>
+      Distributed tracing mechanics: Spans, Traces, DAG graphs, parent-child relationships, and context propagation standards (W3C TraceContext). Analyzing distributed latency waterfalls, discovering hidden network bottlenecks, and head-based versus tail-based trace sampling.</li>
+      <li><strong><a href="05.html">Three Signals Together</a></strong><br>
+      Correlating the telemetry trinity: how metrics trigger alerts, traces pinpoint anomalous RPC hops, and contextual logs explain exact root causes. Exemplars in action. Operational models: RED (Rate, Errors, Duration) for services and USE (Utilization, Saturation, Errors) for infrastructure resources.</li>
+    </ol>
+
+    <h3>Pipelines, Reliability, and SRE Practices (Chapters 06–09)</h3>
+    <ol start="6">
+      <li><strong><a href="06.html">Collection and Delivery</a></strong><br>
+      Architecture of telemetry collection pipelines: OpenTelemetry Collector, memory-limiter, batching processors, buffering, retries, and rate limiting. Pull vs Push collection paradigms, agent topologies, and defending observability clusters from telemetry storms.</li>
+      <li><strong><a href="07.html">SLI and SLO</a></strong><br>
+      Site Reliability Engineering fundamentals: defining user-centric Service Level Indicators (SLI), setting realistic Service Level Objectives (SLO), and calculating the Error Budget. Translating engineering availability into business agreements and release gating.</li>
+      <li><strong><a href="08.html">Alerts and Alarms</a></strong><br>
+      Combating alert fatigue: why notifications must signal customer-impacting symptoms rather than internal server causes. Mechanics of Multiwindow Multi-Burn-Rate alerting algorithms to detect rapid and slow budget depletion with zero false alarms.</li>
+      <li><strong><a href="09.html">On-Call and Incidents</a></strong><br>
+      Production incident lifecycle: triage, mitigation, communication, and resolution. The Incident Commander (IC) operational role. Conducting blameless postmortems and transforming production failures into actionable architectural safeguards.</li>
+    </ol>
+
+    <h3>Battle-Tested Practical Scenarios (Chapters 10–12)</h3>
+    <ol start="10">
+      <li><strong><a href="10.html">Examples · Noob</a></strong><br>
+      Seven practical baseline operational setups: configuring OpenTelemetry SDK instrumentation, structured JSON formatting with request IDs, calculating p95 latencies in PromQL, setting basic alert rules, and deploying local collector agents.</li>
+      <li><strong><a href="11.html">Examples · Pro</a></strong><br>
+      Seven team-scale engineering scenarios: multiwindow burn rate alert rules, tail sampling pipelines for retaining 100% of errors while discarding 95% of healthy traces, high cardinality label sanitization, and automated canary validation.</li>
+      <li><strong><a href="12.html">Examples · IGL</a></strong><br>
+      Seven architecture-level resilience blueprints: designing multi-region telemetry aggregation, circuit breaker activation driven by error budget burn rates, cross-cluster correlation, and zero-data-loss collector failover.</li>
+    </ol>
+
+    <h3>Qualification Question Banks (Chapters 13–15)</h3>
+    <ol start="13">
+      <li><strong><a href="13.html">Questions · Noob</a></strong><br>
+      Fifty qualification questions for entry into observability culture: signal fundamentals, metric types, log formats, basic tracing semantics, and core Prometheus queries.</li>
+      <li><strong><a href="14.html">Questions · Pro</a></strong><br>
+      Fifty qualification questions for experienced engineers: histogram bucket calculations, W3C traceparent parsing, pipeline backpressure, multiwindow multi-burn-rate math, and TSDB cardinality controls.</li>
+      <li><strong><a href="15.html">Questions · IGL</a></strong><br>
+      Fifty qualification questions for technical leadership and principal architects: enterprise telemetry FinOps, incident command hierarchy, cascading failure prevention, and observability platform design.</li>
+    </ol>
+
+    <h3>Transversal Engineering Tools</h3>
+    <ul>
+      <li><strong><a href="glossary.html">Glossary of Concepts</a>:</strong> 24 canonical definitions spanning telemetry signals, collection pipelines, and SRE reliability patterns, cross-referenced across all course chapters.</li>
+      <li><strong><a href="navigator.html">Engineering Navigator</a>:</strong> A 9-lens synthesis matrix (Components, Code, Strength, Limits, Ecosystem, AI Context, Cloud, DevOps, SRE) providing a holistic engineering perspective on the observability domain.</li>
+    </ul>
+
+    <h2 id="levels">Three Levels of Maturity, and Why They Are Kept Apart <a class="anchor-link" href="#levels">#</a></h2>
+    <p>Observability engineering is not merely an assortment of command-line utilities; it is a systematic operational discipline. The course organizes knowledge across a three-tier mastery ladder:</p>
+    <ul>
+      <li><strong>Noob (The Beginner):</strong> Focuses on syntax, metrics collection mechanics, and telemetry hygiene. The primary objective is overcoming fear of unfamiliar CLI tools and configuring basic collection without crashing services.</li>
+      <li><strong>Pro (The Professional):</strong> Operates effectively in distributed engineering teams. Emphasizes automated correlation, high-cardinality control, tail-based sampling, and symptom-based Multi-Burn-Rate alerting.</li>
+      <li><strong>IGL (In-Game Leader / Technical Leader):</strong> Possesses full architectural visibility across clusters, systems, and teams. Defines organizational SLOs, manages incident response protocols, and establishes error budget governance.</li>
+    </ul>
+
+    <div class="box key">
+      <h3>Assessment Evolution: Diagnosing Database Latency <a class="anchor-link" href="#levels" aria-label="Link to this section">#</a></h3>
+      <p>Consider how candidates answer the interview question: <em>«Database query latency spiked from 15ms to 850ms, causing cascading downstream timeouts. How do you triage and resolve this?»</em></p>
+      <p><strong>Noob response:</strong> «I will SSH into the database node, run <code>top</code> and <code>iotop</code> to see if CPU or disk I/O is saturated. Then I will check the slow query log to identify long-running queries and ask DBAs to add missing indexes».</p>
+      <p><strong>Pro response:</strong> «First, I check the p99 latency metric in Prometheus to see if all queries are degraded or only specific routes. Then I open distributed traces in Jaeger/Tempo filtered by <code>status_code=500</code> and latency &gt; 500ms to inspect the database client span. I examine whether the spike is caused by connection pool queue starvation or lock contention, and check if an exemplar points directly to an unindexed query introduced in the latest canary deployment».</p>
+      <p><strong>IGL response:</strong> «I split my response into three parallel streams. First (mitigation): I direct the team to activate circuit breakers and degrade non-essential features, shedding load from the database. Second (incident command): I assign an on-call engineer to trace analysis while the communications lead updates stakeholders and customers. Third (systemic prevention): post-incident, I mandate strict client-side timeouts with exponential backoff and jitter, set up Multi-Burn-Rate alerts, and enforce error budget deployment gates to prevent unverified query regressions from reaching production».</p>
+    </div>
+
+    <h2 id="features">Key Features and Capabilities of This Site <a class="anchor-link" href="#features">#</a></h2>
+    <p>This reference site is engineered following Simple Web Architecture principles: delivering instant responsiveness, zero runtime dependencies, and complete autonomy.</p>
+    <ul>
+      <li><strong>Instant Local Search:</strong> Client-side search bar queries topics, terms, and qualification questions entirely in the browser without network latency or external tracking.</li>
+      <li><strong>Interactive Term Cards:</strong> Key SRE and observability concepts feature interactive dashed underlines. Clicking a term reveals an immediate definition tooltip with a direct link to the full glossary entry.</li>
+      <li><strong>Synchronous 4-Language Support:</strong> Seamlessly switch between English, Russian, Ukrainian, and German without losing your reading position or current section anchor.</li>
+      <li><strong>Thoughtful Typography:</strong> Integrated light and dark color schemes with responsive font-size adjustments saved automatically in local browser storage.</li>
+      <li><strong>Clean Code Copying:</strong> All OpenTelemetry configurations, PromQL expressions, and shell snippets provide single-click clipboard copying.</li>
+      <li><strong>Automated Machine Verification:</strong> Every mathematical formula, parsing example, and context propagation statement is validated by executable checks in CI.</li>
+      <li><strong>Complete Offline Autonomy:</strong> The entire site operates cleanly from local <code>file://</code> paths without internet access, build tools, or frontend frameworks.</li>
+    </ul>
+
+    <div class="box key" id="artifacts">
+      <h2>Artifacts: What You Have After This Page <a class="anchor-link" href="#artifacts">#</a></h2>
+      <p class="artifacts-slogan">Reading &gt;&gt; Your Lifespan Quantum · Dignified Partnership With AI · Rewiring Your Mental Network</p>
+      <p>An engineer's focus is an irreplaceable asset. We ensure that every chapter shapes lasting mental models and practical competence. Having studied this showcase page, you possess:</p>
+      <ol>
+        <li><strong>A Unified Observability Blueprint:</strong> Rigorous comprehension of the operational boundaries between metrics, logs, and traces, and a clear map for navigating incident triage.</li>
+        <li><strong>A Concrete Noob / Pro / IGL Career Ladder:</strong> Precise criteria for assessing your engineering capabilities and preparing for Staff SRE and Tech Lead interviews.</li>
+        <li><strong>A Statistical Mindset on Latency Distributions:</strong> A principled rejection of misleading arithmetic averages in favor of percentiles and histogram distributions.</li>
+        <li><strong>Reliability Governance via Error Budgets:</strong> Transitioning from subjective debates about service stability to objective metric evaluation of allowable risk.</li>
+      </ol>
+    </div>
+  
+
+    <footer>
+      <nav class="pager" aria-label="Neighbouring topics">
+        <p class="pager-next">Next topic: <a href="01.html">Наблюдаемость и мониторинг</a></p>
+      </nav>
+      <p class="footer-note">An AI Factory series site. Built with the same harness: plain HTML and CSS, checked with bash, published via GitHub Pages.</p>
+    </footer>
   </main>
 
 </div>
 </div>
 <script src="../assets/swa.js?v=1"></script>
+<script src="../assets/terms.js?v=1"></script>
+<script src="../assets/cp.js?v=1"></script>
 </body>
 </html>
