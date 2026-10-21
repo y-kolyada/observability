@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Пример: бюджет ошибок в числах · sre-observability · ai|</title>
+<title>Примеры Observability · уровень Noob · sre-observability · ai|</title>
 <!-- meta: built by tools/build-meta.py - do not edit by hand -->
-<meta name="description" content="Лид страницы: о чём она и кому нужна.">
+<meta name="description" content="Шесть практических сценариев базового уровня: экспорт метрик Prometheus, JSON-логи, золотые сигналы, зонды Kubernetes, алерты и sidecar-агент OTel.">
 <link rel="canonical" href="https://y-kolyada.github.io/observability/ru/10.html">
 <link rel="alternate" hreflang="ru" href="https://y-kolyada.github.io/observability/ru/10.html">
 <link rel="alternate" hreflang="en" href="https://y-kolyada.github.io/observability/en/10.html">
@@ -15,12 +15,12 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="sre-observability">
 <meta property="og:title" content="Примеры · Noob">
-<meta property="og:description" content="Лид страницы: о чём она и кому нужна.">
+<meta property="og:description" content="Шесть практических сценариев базового уровня: экспорт метрик Prometheus, JSON-логи, золотые сигналы, зонды Kubernetes, алерты и sidecar-агент OTel.">
 <meta property="og:url" content="https://y-kolyada.github.io/observability/ru/10.html">
 <meta property="og:locale" content="ru_RU">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Примеры · Noob","description":"Лид страницы: о чём она и кому нужна.","url":"https://y-kolyada.github.io/observability/ru/10.html","inLanguage":"ru","isPartOf":{"@type":"WebSite","name":"sre-observability","url":"https://y-kolyada.github.io/observability/"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Примеры · Noob","description":"Шесть практических сценариев базового уровня: экспорт метрик Prometheus, JSON-логи, золотые сигналы, зонды Kubernetes, алерты и sidecar-агент OTel.","url":"https://y-kolyada.github.io/observability/ru/10.html","inLanguage":"ru","isPartOf":{"@type":"WebSite","name":"sre-observability","url":"https://y-kolyada.github.io/observability/"}}</script>
 <!-- /meta -->
 <link rel="stylesheet" href="../assets/style.css?v=1">
 <script>
@@ -94,20 +94,166 @@
 
   <main id="main">
     <h1>Примеры · Noob</h1>
-    <p class="page-size" data-words="51">Слов: 51</p>
-    <p class="lead">Лид страницы: о чём она и кому нужна. Одно предложение, не длиннее 160 знаков.</p>
+    <p class="page-size" data-words="1329">Слов: 1329</p>
+    <p class="lead">Шесть практических сценариев базового уровня: экспорт метрик Prometheus, JSON-логи, золотые сигналы, зонды Kubernetes, алерты и sidecar-агент OTel.</p>
 
     <div class="box key" id="key-idea">
       <h2>Главная мысль страницы <a class="anchor-link" href="#key-idea" aria-label="ссылка на этот блок">#</a></h2>
-      <p>Текст этого раздела ещё не написан.</p>
+      <p>На уровне Noob цель инженера - убрать страх перед незнакомой телеметрией и перестать гадать о состоянии сервиса по случайным признакам. Наблюдаемость начинается не со сложных распределенных трассировок, а с дисциплины базовых интерфейсов: понятный текстовый формат метрик, строгий структурированный вывод логов в stdout, корректно настроенные проверки жизнеспособности подов и элементарные алерты на отказ инстанса. Шесть разобранных ниже сценариев охватывают фундамент, без которого невозможно построить ни один надежный сервис в продакшне. Каждый разбор содержит четкую постановку прикладной задачи, рабочий конфигурационный блок и глубокое объяснение внутренней механики («Почему так»).</p>
     </div>
 
-    <h2 id="first">1 · Три сигнала: метрика, лог, трасса <a class="anchor-link" href="#first">#</a></h2>
-    <p>Текст этого раздела ещё не написан.</p>
+    <h2 id="metrics-export">1 · Экспорт метрик: HTTP эндпоинт /metrics в формате Prometheus <a class="anchor-link" href="#metrics-export">#</a></h2>
+    <p><strong>Задача:</strong> предоставить стандартный HTTP-эндпоинт <code>/metrics</code> для регулярного сбора телеметрии скрейпером Prometheus, содержащий монотонно растущий счетчик HTTP-запросов и текущее число активных соединений с клиентами.</p>
+    <pre><code># GET /metrics HTTP/1.1
+# Host: payment-service.internal:8080
+
+# HELP http_requests_total Total number of HTTP requests processed.
+# TYPE http_requests_total counter
+http_requests_total{method="GET",handler="/pay",status="200"} 1027
+http_requests_total{method="POST",handler="/pay",status="500"} 15
+
+# HELP jvm_active_connections Current active client connections.
+# TYPE jvm_active_connections gauge
+jvm_active_connections{pool="http"} 42</code></pre>
+    <pre><code># Быстрая терминальная проверка эндпоинта и извлечение сырых значений
+$ curl -s http://localhost:8080/metrics | awk '/^http_requests_total/ {print $1, $2}' | sed 's/{.*}//'
+http_requests_total 1027
+http_requests_total 15</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Текстовый протокол Prometheus (OpenMetrics) стал стандартом де-факто благодаря своей предельной простоте и самодокументируемости. Каждая метрика сопровождается метаданными: <code># HELP</code> дает человекочитаемое описание назначения ряда, а <code># TYPE</code> явно сообщает серверу Prometheus модель данных (counter или gauge). Для типа <code>counter</code> действует фундаментальное правило монотонности: значение счетчика может только увеличиваться при обработке событий либо сбрасываться до нуля при перезапуске процесса приложения. Если передать убывающее число без типа gauge, Prometheus воспримет это как аварийный перезапуск и выдаст ложный скачок скорости в функции <code>rate()</code>. Метки внутри фигурных скобок обязаны иметь низкую кардинальность: путь эндпоинта передается в нормализованном виде (<code>/pay</code>), а не с динамическим идентификатором заказа (<code>/pay/12345</code>).</div>
+
+    <h2 id="json-logging">2 · Структурированный JSON-лог: поток событий stdout для централизованного сбора <a class="anchor-link" href="#json-logging">#</a></h2>
+    <p><strong>Задача:</strong> перевести журнал событий приложения из хаотичного неструктурированного текста в канонический формат JSON в стандартный поток вывода (stdout) для автоматического парсинга агентами Vector, Fluentbit или Promtail.</p>
+    <pre><code># Пример строки лога, отправляемой приложением в stdout
+{"timestamp":"2026-10-21T11:00:00Z","level":"info","service":"auth-service","env":"prod","msg":"user authenticated successfully","user_id":"usr_9981","client_ip":"198.51.100.24","duration_ms":14.2}</code></pre>
+    <pre><code># Тестирование извлечения обязательных полей через потоковый процессор jq
+$ echo '{"timestamp":"2026-10-21T11:00:00Z","level":"info","service":"auth-service","msg":"user authenticated successfully"}' \
+  | jq -r '"\(.timestamp) \(.level) \(.service)"'
+2026-10-21T11:00:00Z info auth-service</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Запись логов в локальные файлы на диск контейнера категорически нарушает принципы облачной архитектуры (12-Factor App): при падении или перезапуске пода неротированные файлы мгновенно уничтожаются или переполняют дисковый накопитель ноды. Приложение обязано писать непрерывный поток структурированных JSON-событий в стандартный вывод <code>stdout</code>. Каждая строка должна быть валидным независимым JSON-объектом. Стандартизация ключей верхнего уровня критична для всей инженерной команды: поле <code>timestamp</code> строго формируется в UTC в формате ISO 8601 (с суффиксом Z), поле <code>level</code> нормализуется в нижнем регистре (<code>debug</code>, <code>info</code>, <code>warn</code>, <code>error</code>), а поле <code>service</code> позволяет централизованным хранилищам (Loki, Elasticsearch, ClickHouse) разделять потоки телеметрии без дорогостоящего парсинга регулярными выражениями.</div>
+
+    <h2 id="golden-signals">3 · Дашборд Four Golden Signals: PromQL запросы для базовой панели <a class="anchor-link" href="#golden-signals">#</a></h2>
+    <p><strong>Задача:</strong> составить минимальный и достаточный набор PromQL-запросов для визуализации четырех золотых сигналов надежности (Traffic, Errors, Latency, Saturation) на главной панели мониторинга сервиса.</p>
+    <pre><code># 1. Трафик (общий входящий поток запросов в секунду, RPS)
+sum(rate(http_requests_total{service="payment-service"}[5m]))
+
+# 2. Ошибки (процент пятисотых ответов от общего потока трафика)
+sum(rate(http_requests_total{service="payment-service",status=~"5.."}[5m]))
+  /
+sum(rate(http_requests_total{service="payment-service"}[5m])) * 100
+
+# 3. Задержка (95-й перцентиль времени обработки запросов в секундах)
+histogram_quantile(0.95,
+  sum(rate(http_request_duration_seconds_bucket{service="payment-service"}[5m])) by (le)
+)
+
+# 4. Насыщение (утилизация процессорного лимита контейнера в процентах)
+sum(rate(container_cpu_usage_seconds_total{container="payment-service"}[5m]))
+  /
+sum(kube_pod_container_resource_limits{resource="cpu",container="payment-service"}) * 100</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Четыре золотых сигнала Google SRE - универсальный рецепт оценки любого клиентского сервиса. Начинающие инженеры часто совершают грубую ошибку, выводя на экран абсолютное количество ошибок вместо относительного процента. Всплеск в 15 ошибок при трафике 20 RPS означает катастрофу (75% отказов), в то время как 15 ошибок при 15 000 RPS - нормальный рабочий фон (0.1%). Вычисление процента ошибок через деление рейтов пятисотых статусов на общий рейт дает объективную картину деградации. В запросах задержки использование перцентиля p95 вместо среднего значения позволяет увидеть реальные торможения клиентов, а окно сглаживания <code>[5m]</code> защищает графики от паразитного высокочастотного дребезга.</div>
+
+    <h2 id="health-probes">4 · Зонды жизнеспособности: разграничение livenessProbe и readinessProbe <a class="anchor-link" href="#health-probes">#</a></h2>
+    <p><strong>Задача:</strong> настроить проверки контейнера в Kubernetes так, чтобы предотвратить каскадный перезапуск подов и перегрузку кластера при временной задержке внешних баз данных.</p>
+    <pre><code># Фрагмент манифеста Pod / Deployment: spec.containers[0]
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: 8080
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 2
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /ready
+    port: 8080
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 2
+  failureThreshold: 2</code></pre>
+    <pre><code># Реализация эндпоинтов в коде сервиса:
+# 1. /healthz (Liveness): проверяет только то, что процесс приложения жив и event-loop не заблокирован.
+#    Всегда возвращает HTTP 200, если процесс отвечает. Никаких сетевых запросов к БД!
+# 2. /ready (Readiness): проверяет доступность пула соединений БД, локального кэша и очередей.
+#    Возвращает HTTP 503, если БД временно недоступна, временно исключая под из Service endpoints.</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Самая разрушительная ошибка проектирования на уровне Noob - опрашивать базу данных или внешние микросервисы внутри <code>livenessProbe</code>. Когда СУБД испытывает пиковую нагрузку и начинает отвечать дольше 2 секунд, kubelet считает, что процесс сервиса завис, и принудительно убивает его сигналом <code>SIGKILL</code>. Одновременный перезапуск десятков подов обрушивает на базу лавину новых тяжелых TCP-соединений для прогрева пула, что гарантированно переводит всю инфраструктуру в вечный ступор (CrashLoopBackOff). Запомните железное правило: зонд <code>livenessProbe</code> отвечает только на вопрос «Жив ли локальный процесс?», а зонд <code>readinessProbe</code> - «Готов ли под принимать пользовательский трафик из балансировщика прямо сейчас?».</div>
+
+    <h2 id="instance-down-alert">5 · Базовое правило алерта: обнаружение недоступности инстанса в PrometheusRule <a class="anchor-link" href="#instance-down-alert">#</a></h2>
+    <p><strong>Задача:</strong> объявить декларативное правило алерта для Prometheus Operator, гарантирующее надежное оповещение дежурной смены при падении экземпляра приложения с фильтрацией кратковременных сетевых сбоев.</p>
+    <pre><code>apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: instance-down-rule
+  namespace: monitoring
+  labels:
+    role: alert-rules
+spec:
+  groups:
+    - name: application-availability
+      rules:
+        - alert: ServiceInstanceDown
+          expr: up{job="payment-service"} == 0
+          for: 2m
+          labels:
+            severity: critical
+            team: payments
+          annotations:
+            summary: "Экземпляр сервиса {{ $labels.instance }} недоступен для сбора метрик"
+            description: "Prometheus не может получить метрики с {{ $labels.instance }} более 2 минут. Проверьте статус пода и логи kubelet."
+            runbook_url: "https://wiki.internal/sre/runbooks/service-instance-down"</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Сервер Prometheus автоматически генерирует синтетическую метрику <code>up{job="..."}</code> для каждой обнаруженной цели сбора (target): значение равно <code>1</code>, если HTTP-запрос к <code>/metrics</code> завершился успешно с кодом 200, и <code>0</code> при ошибке соединения, таймауте или неверном статусе. Параметр <code>for: 2m</code> имеет первостепенное значение: без него любой кратковременный сетевой флап, секундная потеря пакета или штатный rolling-update деплой спровоцируют ложный звонок дежурному инженеру. Окно в 2 минуты гарантирует, что таргет пропустил несколько последовательных интервалов скрейпинга (при стандартном шаге в 15-30 секунд), подтверждая реальный отказ. Поле <code>runbook_url</code> в аннотациях обязательно: дежурный ночью не должен искать документацию вслепую, ссылка обязана сразу вести на пошаговую инструкцию по локализации сбоя.</div>
+
+    <h2 id="otel-sidecar">6 · Минимальный агент телеметрии: развертывание OpenTelemetry Collector в режиме sidecar <a class="anchor-link" href="#otel-sidecar">#</a></h2>
+    <p><strong>Задача:</strong> настроить локальный легковесный агент OpenTelemetry Collector рядом с контейнером приложения в одном поде Kubernetes для приема OTLP-телеметрии по localhost и надежной доставки на центральный кластер.</p>
+    <pre><code># otel-collector-sidecar-config.yaml
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 127.0.0.1:4317
+      http:
+        endpoint: 127.0.0.1:4318
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_percentage: 75
+    spike_limit_percentage: 20
+  batch:
+    send_batch_size: 512
+    timeout: 5s
+
+exporters:
+  otlp:
+    endpoint: otel-gateway.monitoring.svc.cluster.local:4317
+    tls:
+      insecure: true
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [otlp]
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [otlp]</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Отправка телеметрии из приложения напрямую через сеть на удаленные кластеры хранения создает критические риски: при сетевых тайм-аутах или пиках трафика буферы SDK приложения переполняются, блокируя рабочие потоки бизнес-логики. Запуск коллектора в качестве локального sidecar-контейнера изолирует приложение: код всегда сбрасывает спаны и метрики на сверхбыстрый локальный сокет <code>127.0.0.1:4317</code> по легковесному gRPC/Protobuf протоколу. Коллектор берет на себя тяжелую работу: сжатие данных, батчинг (<code>batch</code> объединяет до 512 записей в один сетевой пакет) и управление памятью. Процессор <code>memory_limiter</code> защищает контейнер от падения по OOMKilled, динамически сбрасывая излишки телеметрии, если центральный шлюз временно недоступен.</div>
 
     <div class="box key" id="artifacts">
       <h2>Артефакты: что у вас есть после этой страницы <a class="anchor-link" href="#artifacts">#</a></h2>
-      <p>Текст этого раздела ещё не написан.</p>
+      <p class="artifacts-slogan">Чтение &gt;&gt; Ваш квант времени жизни · Партнерство достоинства вместе с AI · Перестройка вашей нейросети</p>
+      <p>Освоив практические сценарии уровня Noob, вы заложили надежный фундамент наблюдаемости собственного сервиса:</p>
+      <ul>
+        <li><strong>Чистый экспорт метрик:</strong> предоставление стандартного эндпоинта <code>/metrics</code> с правильным разделением типов Counter и Gauge и метаданными для Prometheus.</li>
+        <li><strong>Стандартизация журнала событий:</strong> структурированный вывод JSON-логов в stdout с обязательными полями <code>timestamp</code>, <code>level</code> и <code>service</code>.</li>
+        <li><strong>Контроль золотых сигналов:</strong> расчет трафика, относительного процента пятисотых ошибок и перцентиля задержки p95 через канонические PromQL-выражения.</li>
+        <li><strong>Защита от каскадных перезапусков:</strong> строгое разграничение быстрой проверки процесса <code>livenessProbe</code> и комплексной готовности зависимостей <code>readinessProbe</code>.</li>
+        <li><strong>Надежное оповещение:</strong> декларативное описание алерта недоступности сервиса в PrometheusRule с защитой от сетевого дребезга и ссылкой на runbook.</li>
+        <li><strong>Изоляция телеметрии:</strong> подключение локального агента OpenTelemetry Collector в режиме sidecar для бережной буферизации данных.</li>
+      </ul>
     </div>
   
 

@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Пример: разбор инцидента по сигналам · sre-observability · ai|</title>
+<title>Примеры Observability · уровень IGL · sre-observability · ai|</title>
 <!-- meta: built by tools/build-meta.py - do not edit by hand -->
-<meta name="description" content="Лид страницы: о чём она и кому нужна.">
+<meta name="description" content="Шесть практических сценариев системного уровня IGL: алгоритмический триаж SEV-1, защита от каскадов, подавление взрыва кардинальности, гейты CI/CD и Tail-based...">
 <link rel="canonical" href="https://y-kolyada.github.io/observability/ru/12.html">
 <link rel="alternate" hreflang="ru" href="https://y-kolyada.github.io/observability/ru/12.html">
 <link rel="alternate" hreflang="en" href="https://y-kolyada.github.io/observability/en/12.html">
@@ -15,12 +15,12 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="sre-observability">
 <meta property="og:title" content="Примеры · IGL">
-<meta property="og:description" content="Лид страницы: о чём она и кому нужна.">
+<meta property="og:description" content="Шесть практических сценариев системного уровня IGL: алгоритмический триаж SEV-1, защита от каскадов, подавление взрыва кардинальности, гейты CI/CD и Tail-based...">
 <meta property="og:url" content="https://y-kolyada.github.io/observability/ru/12.html">
 <meta property="og:locale" content="ru_RU">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Примеры · IGL","description":"Лид страницы: о чём она и кому нужна.","url":"https://y-kolyada.github.io/observability/ru/12.html","inLanguage":"ru","isPartOf":{"@type":"WebSite","name":"sre-observability","url":"https://y-kolyada.github.io/observability/"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Примеры · IGL","description":"Шесть практических сценариев системного уровня IGL: алгоритмический триаж SEV-1, защита от каскадов, подавление взрыва кардинальности, гейты CI/CD и Tail-based...","url":"https://y-kolyada.github.io/observability/ru/12.html","inLanguage":"ru","isPartOf":{"@type":"WebSite","name":"sre-observability","url":"https://y-kolyada.github.io/observability/"}}</script>
 <!-- /meta -->
 <link rel="stylesheet" href="../assets/style.css?v=1">
 <script>
@@ -94,20 +94,170 @@
 
   <main id="main">
     <h1>Примеры · IGL</h1>
-    <p class="page-size" data-words="51">Слов: 51</p>
-    <p class="lead">Лид страницы: о чём она и кому нужна. Одно предложение, не длиннее 160 знаков.</p>
+    <p class="page-size" data-words="1552">Слов: 1552</p>
+    <p class="lead">Шесть практических сценариев системного уровня IGL: алгоритмический триаж SEV-1, защита от каскадов, подавление взрыва кардинальности, гейты CI/CD и Tail-based сэмплирование.</p>
 
     <div class="box key" id="key-idea">
       <h2>Главная мысль страницы <a class="anchor-link" href="#key-idea" aria-label="ссылка на этот блок">#</a></h2>
-      <p>Текст этого раздела ещё не написан.</p>
+      <p>На уровне IGL (In-Game Leader / внутриигровой лидер) фокус внимания инженера смещается от отдельных сервисов к архитектурной экосистеме, устойчивости бизнес-процессов и экономике платформы. Сложные технические вызовы и управление масштабными системами - это захватывающая игра, где лидер видит все игровое поле, формирует правила надежности и несет ответственность за общий результат. Шесть сценариев ниже раскрывают системные практики высшего уровня: алгоритмический триаж масштабных аварий без потерь времени, предотвращение каскадных штормов через бюджетирование повторов, защиту баз данных TSDB от фатального взрыва кардинальности, автоматизацию политики релизов по остатку бюджета ошибок, оптимизацию затрат на телеметрию через умное сэмплирование и культуру постмортемов без поиска виновных.</p>
     </div>
 
-    <h2 id="first">1 · Три сигнала: метрика, лог, трасса <a class="anchor-link" href="#first">#</a></h2>
-    <p>Текст этого раздела ещё не написан.</p>
+    <h2 id="incident-triage">1 · Триаж межсервисного инцидента SEV-1: алгоритмический переход от SLI к узкому месту <a class="anchor-link" href="#incident-triage">#</a></h2>
+    <p><strong>Задача:</strong> при срабатывании пейджера о катастрофической скорости сгорания бюджета ошибок (Burn Rate 14.4) локализовать сбойный компонент в распределенной цепи за 3 минуты, исключив панику и случайный перебор гипотез.</p>
+    <pre><code># Шаг 1. Оценка масштаба бедствия по панели SLI / RED метрик
+# Входной RPS стабилен (1200 RPS), но процент 500 ошибок в API Gateway подскочил до 18%
+sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m])) * 100
+
+# Шаг 2. Извлечение первого попавшегося сбойного trace_id через Exemplar на графике задержки
+# Exemplar возвращает: trace_id = 4bf92f3577b34da6a3ce929d0e0e4736
+
+# Шаг 3. Инспекция критического пути в Jaeger / Grafana Tempo:
+# [checkout-service: POST /api/checkout] ....................... 4500ms (HTTP 504)
+#   └── [inventory-service: POST /reserve] .................... 4480ms (gRPC DEADLINE_EXCEEDED)
+#         └── [db.postgres: query "SELECT stock FOR UPDATE"] .. 4470ms (TIMEOUT)
+
+# Шаг 4. Извлечение структурированного лога inventory-service по trace_id через CLI:
+$ echo '{"timestamp":"2026-10-21T11:02:15Z","level":"error","service":"inventory-service","trace_id":"4bf92f3577b34da6a3ce929d0e0e4736","msg":"postgres connection pool exhausted (active=50, max=50)"}' | jq -r '"\(.service): \(.msg)"'
+inventory-service: postgres connection pool exhausted (active=50, max=50)</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Во время аварии SEV-1 неопытные инженеры теряют до получаса, пытаясь читать сырые логи сотен контейнеров или перезапуская виртуальные машины наугад. Лидер системы (IGL) направляет команду по строгому детерминированному алгоритму: от пользовательского симптома (SLI) через RED-сигналы к конкретному Exemplar, мгновенно вскрывающему распределенный трейс. Трейс наглядно показывает, где именно застряло выполнение, а контекстный лог с тем же <code>trace_id</code> указывает причину (исчерпание пула соединений БД). Решение принимается за 180 секунд: не чинить БД прямо сейчас, а применить немедленное купирование симптома (Mitigation) - активировать аварийный флаг обхода резервирования склада (graceful degradation) и разгрузить базу.</div>
+
+    <h2 id="cascading-retry-budget">2 · Предотвращение каскадного сбоя: бюджетирование повторов (Retry Budget) и Circuit Breaker <a class="anchor-link" href="#cascading-retry-budget">#</a></h2>
+    <p><strong>Задача:</strong> остановить разрушительный каскадный шторм повторных запросов (retry storm), при котором кратковременная задержка микросервиса склада приводит к полному параличу всей платформы.</p>
+    <pre><code># Конфигурация защитного фильтра Envoy / Istio VirtualService:
+# Жесткое ограничение доли повторных запросов лимитом в 10% от нормального трафика
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: inventory-retry-budget
+spec:
+  hosts:
+    - inventory-service
+  http:
+    - route:
+        - destination:
+            host: inventory-service
+      retries:
+        attempts: 3
+        perTryTimeout: 500ms
+        retryOn: "5xx,connect-failure,refused-stream"
+        retryBackOff:
+          baseInterval: 25ms
+          maxInterval: 250ms</code></pre>
+    <pre><code># Математическая валидация алгоритма Retry Budget:
+# На 1000 штатных входящих запросов клиентам разрешено выполнить не более 100 ретраев
+$ python3 -c "regular_reqs = 1000; max_retries = int(regular_reqs * 0.10); \
+print(f'Базовый поток: {regular_reqs}, Максимальный бюджет повторов: {max_retries}')"
+Базовый поток: 1000, Максимальный бюджет повторов: 100</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Наивные повторные попытки (retries) без ограничений - главная причина масштабных каскадных отказов в распределенных системах. Если целевой сервис кратковременно перегружен и не успевает отвечать за 500 мс, а сотни клиентов одновременно повторяют каждый запрос по 3 раза, суммарная нагрузка на умирающий сервис мгновенно утраивается. Возникает эффект громоподобного стада (thundering herd). Алгоритм Retry Budget вводит строгий математический предохранитель: сервис-меш или клиентская библиотека отслеживает соотношение успешных вызовов к повторным. Как только объем ретраев превышает 10% от нормального трафика, все последующие повторы немедленно отсекаются с быстрым возвратом ошибки на клиенте (fail-fast), давая бэкенду необходимое окно времени для восстановления.</div>
+
+    <h2 id="cardinality-explosion">3 · Локализация и подавление взрыва кардинальности метрик (High Cardinality) в TSDB <a class="anchor-link" href="#cardinality-explosion">#</a></h2>
+    <p><strong>Задача:</strong> спасти сервер Prometheus от падения по OOM (Out Of Memory) из-за случайного добавления динамического идентификатора пользователя в метку метрики, локализовав виновника через TSDB API и удалив метку на шлюзе OTel.</p>
+    <pre><code># 1. Поиск метрик с аномальным количеством уникальных временных рядов через Prometheus TSDB API
+$ curl -s http://prometheus:9090/api/v1/status/tsdb | jq '.data.seriesCountByMetricName[0]'
+{
+  "name": "http_requests_total",
+  "value": 5000000
+}</code></pre>
+    <pre><code># 2. Хирургическое исправление: удаление метки user_id в OpenTelemetry Collector
+# otel-gateway-config.yaml
+processors:
+  transform:
+    metric_statements:
+      - context: datapoint
+        statements:
+          # Удаляем высококардинальные метки пользователя и заказа, сохраняя ряд агрегированным
+          - delete_key(attributes, "user_id")
+          - delete_key(attributes, "order_id")
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, transform, batch]
+      exporters: [prometheusremotewrite]</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Базы данных временных рядов (Prometheus, VictoriaMetrics, M3DB) оптимизированы для хранения миллионов числовых точек по относительно небольшому числу рядов (сотни тысяч серий). Каждая уникальная комбинация меток (label value) создает физически новый временный ряд со своим индексом в оперативной памяти. Если неопытный разработчик помещает <code>user_id</code> (100 000 значений) в метку метрики <code>http_requests_total</code>, число рядов мгновенно возрастает до 5 000 000, вызывая взрывной расход RAM и фатальный OOMKilled сервера мониторинга. IGL не ждет релиза патча от разработчиков: процессор <code>transform</code> на центральном шлюзе OpenTelemetry удаляет вредоносные ключи прямо в потоке телеметрии, защищая стабильность платформы сбора.</div>
+
+    <h2 id="error-budget-policy">4 · Регламент управления надежностью: блокировка релизов по исчерпанию Error Budget <a class="anchor-link" href="#error-budget-policy">#</a></h2>
+    <p><strong>Задача:</strong> автоматизировать регламент надежности SRE в конвейере CI/CD: блокировать выкатку новых продуктовых фич, если сервис полностью исчерпал свой 30-дневный бюджет ошибок.</p>
+    <pre><code># Фрагмент скрипта CI/CD гейта проверки бюджета ошибок перед выкаткой в продакшн
+# Запрос к Prometheus API для вычисления оставшегося бюджета: 1 - ((1 - SLI) / (1 - SLO))
+$ python3 -c "
+budget_remaining = -0.05  # -5% (бюджет ошибок полностью сожжен частыми сбоями)
+status = 'BLOCKED' if budget_remaining < 0 else 'ALLOWED'
+print(f'Статус CI/CD гейта: {status}')
+if status == 'BLOCKED':
+    print('ДЕПЛОЙ ОСТАНОВЛЕН: Бюджет ошибок исчерпан. Разрешены только хотфиксы надежности!')
+    exit(1)
+"
+Статус CI/CD гейта: BLOCKED
+ДЕПЛОЙ ОСТАНОВЛЕН: Бюджет ошибок исчерпан. Разрешены только хотфиксы надежности!</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Бюджет ошибок (Error Budget) - главный инструмент устранения вечного конфликта между требованиями бизнеса к скорости внедрения инноваций и требованиями SRE к стабильности продакшна. Без жесткого регламента призывы «писать стабильнее» игнорируются командами фич. Политика бюджетов ошибок фиксируется как официальный договор: пока бюджет положителен (&gt; 0%), разработчики имеют полное право деплоить код с любой желаемой частотой. Как только баланс уходит в минус (&lt; 0%), деплой фичей автоматически блокируется пайплайном: вся команда переключается на задачи надежности, покрытие интеграционными тестами и устранение узких мест архитектуры, пока баланс бюджета не восстановится.</div>
+
+    <h2 id="tail-based-sampling">5 · Оптимизация FinOps телеметрии: хвостовое сэмплирование (Tail-based Sampling) трейсов <a class="anchor-link" href="#tail-based-sampling">#</a></h2>
+    <p><strong>Задача:</strong> снизить ежемесячные счета за облачное хранение распределенных трассировок на 90%, обеспечив при этом 100% гарантированное сохранение всех аномальных и медленных пользовательских запросов.</p>
+    <pre><code># Конфигурация процессора tail_sampling в OpenTelemetry Gateway
+# otel-collector-gateway.yaml
+processors:
+  tail_sampling:
+    decision_wait: 10s
+    num_traces: 10000
+    expected_new_traces_per_sec: 2000
+    policies:
+      # Политика 1: всегда сохранять 100% трейсов, завершившихся ошибкой (HTTP 5xx, gRPC error)
+      - name: drop-errors-never
+        type: status_code
+        status_code:
+          status_codes: [ERROR]
+
+      # Политика 2: всегда сохранять 100% трейсов, длительность которых превысила 2 секунды
+      - name: slow-traces-always
+        type: latency
+        latency:
+          threshold_ms: 2000
+
+      # Политика 3: обычные успешные запросы сэмплировать до 1% для сохранения фоновой статистики
+      - name: successful-sample-rate
+        type: probabilistic
+        probabilistic:
+          sampling_percentage: 1.0</code></pre>
+    <pre><code># Экономический расчет экономии: сохраняем 100% ошибок и сокращаем общий поток данных на 98%
+$ python3 -c "total=10000; errors=100; ok=9900; \
+kept_errors=errors; kept_ok=int(ok*0.01); kept_total=kept_errors+kept_ok; \
+print(f'Сохранено ошибок: {kept_errors/errors*100:.0f}%, Объем исходящего потока: {kept_total/total*100:.1f}%')"
+Сохранено ошибок: 100%, Объем исходящего потока: 2.0%</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Классическое сэмплирование на входе (Head-based sampling) принимает решение о записи трейса вслепую в момент прихода первого HTTP-запроса на ingress-контроллер. Если настроить 10% сэмплирование, система выбросит 90% редких и ценных аварийных трейсов, которые упадут через 3 секунды в глубине микросервисной сети. Хвостовое сэмплирование (Tail-based sampling) временно накапливает все связанные спаны запроса в буфере памяти шлюза на 10 секунд. После завершения пути шлюз анализирует итоговое состояние: если хотя бы один спан завершился ошибкой или запрос длился аномально долго, трейс сохраняется целиком. Миллионы однообразных успешных запросов сбрасываются до 1%, сокращая дисковые расходы компании в десятки раз без потери диагностической ценности.</div>
+
+    <h2 id="blameless-postmortem-exec">6 · Разбор аварии без поиска виновных: постмортем инцидента с системными Action Items <a class="anchor-link" href="#blameless-postmortem-exec">#</a></h2>
+    <p><strong>Задача:</strong> оформить эталонный документ разбора инцидента SEV-1 (Blameless Postmortem), преобразовав эмоциональное обсуждение сбоя в перечень конкретных системных превентивных задач для инженерной платформы.</p>
+    <pre><code># Отчет о постмортеме инцидента SEV-1: Массовый отказ API платежей (2026-10-21)
+1. Хронология инцидента:
+   - 11:00 UTC - Зафиксирован всплеск ошибок 504 на эндпоинте /api/checkout.
+   - 11:02 UTC - Сработал алерт Multi-Burn-Rate 14.4 (MTTD = 2 минуты).
+   - 11:05 UTC - Incident Commander по Exemplar локализовал блокировку пула соединений БД склада.
+   - 11:08 UTC - Применено немедленное купирование: включен аварийный флаг обхода резерва (MTTR = 8 минут).
+   - 11:15 UTC - Доступность вернулась к 100%, сгорело 3.4% месячного бюджета ошибок.
+
+2. Системная первопричина (Root Cause):
+   - Отсутствие дедлайнов в клиентских вызовах gRPC привело к зависанию потоков при кратковременной деградации индекса СУБД.
+
+3. Системные предупредительные действия (Action Items):
+   - [ACTION-1] Ограничить максимальный таймаут вызовов gRPC до 1.5с на уровне service mesh (Срок: 3 дня, Ответственный: SRE).
+   - [ACTION-2] Внедрить алгоритм Retry Budget с лимитом 10% в базовую библиотеку клиентов (Срок: 1 неделя, Ответственный: Core Team).
+   - [ACTION-3] Добавить проверку остатка Error Budget в пайплайны CI/CD перед деплоем (Срок: 2 недели, Ответственный: DevOps).</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Главный показатель инженерной культуры уровня IGL - умение извлекать пользу из аварий. Если постмортем скатывается к поиску виноватого человека («дежурный слишком медленно реагировал» или «разработчик забыл про индекс»), инженеры перестанут открыто сообщать о сбоях, а система продолжит ломаться. Постмортем без поиска виноватых (Blameless Postmortem) исходит из постулата: ошибки людей неизбежны, но надежная архитектура обязана содержать защитные барьеры, делающие единичную ошибку человека безопасной для продакшна. Документ считается завершенным только тогда, когда каждое действие (Action Item) направлено на автоматизацию инструмента или изменение системной конфигурации, предотвращающей повторение данного класса сбоев навсегда.</div>
 
     <div class="box key" id="artifacts">
       <h2>Артефакты: что у вас есть после этой страницы <a class="anchor-link" href="#artifacts">#</a></h2>
-      <p>Текст этого раздела ещё не написан.</p>
+      <p class="artifacts-slogan">Чтение &gt;&gt; Ваш квант времени жизни · Партнерство достоинства вместе с AI · Перестройка вашей нейросети</p>
+      <p>Освоив практические сценарии уровня IGL, вы получили инструментарий системного управления надежностью и архитектурой платформы:</p>
+      <ul>
+        <li><strong>Алгоритмический триаж аварий:</strong> трехминутный протокол расследования SEV-1 инцидентов от симптома SLI до точной локализации через Exemplars и спаны.</li>
+        <li><strong>Защита от каскадных штормов:</strong> настройка Retry Budget для жесткого ограничения лавины повторных запросов при частичных отказах.</li>
+        <li><strong>Предотвращение взрыва кардинальности:</strong> оперативная изоляция высококардинальных меток на шлюзе OTel для спасения TSDB.</li>
+        <li><strong>Управление политикой релизов:</strong> интеграция объективных гейтов CI/CD на основе баланса Error Budget для балансировки скорости и надежности.</li>
+        <li><strong>Оптимизация экономики телеметрии:</strong> внедрение хвостового сэмплирования (Tail-based Sampling) для стопроцентного сохранения ошибок при сокращении расходов на 90%.</li>
+        <li><strong>Инженерная культура постмортемов:</strong> фиксация системных барьеров и Action Items без поиска виновных по итогам каждого инцидента.</li>
+      </ul>
     </div>
   
 

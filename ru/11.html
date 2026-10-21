@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Пример: перцентиль по гистограмме · sre-observability · ai|</title>
+<title>Примеры Observability · уровень Pro · sre-observability · ai|</title>
 <!-- meta: built by tools/build-meta.py - do not edit by hand -->
-<meta name="description" content="Лид страницы: о чём она и кому нужна.">
+<meta name="description" content="Шесть практических сценариев командного уровня: перцентили p99, W3C TraceContext, Exemplars, поиск N+1 в трейсах, Multi-Burn-Rate и Alertmanager.">
 <link rel="canonical" href="https://y-kolyada.github.io/observability/ru/11.html">
 <link rel="alternate" hreflang="ru" href="https://y-kolyada.github.io/observability/ru/11.html">
 <link rel="alternate" hreflang="en" href="https://y-kolyada.github.io/observability/en/11.html">
@@ -15,12 +15,12 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="sre-observability">
 <meta property="og:title" content="Примеры · Pro">
-<meta property="og:description" content="Лид страницы: о чём она и кому нужна.">
+<meta property="og:description" content="Шесть практических сценариев командного уровня: перцентили p99, W3C TraceContext, Exemplars, поиск N+1 в трейсах, Multi-Burn-Rate и Alertmanager.">
 <meta property="og:url" content="https://y-kolyada.github.io/observability/ru/11.html">
 <meta property="og:locale" content="ru_RU">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Примеры · Pro","description":"Лид страницы: о чём она и кому нужна.","url":"https://y-kolyada.github.io/observability/ru/11.html","inLanguage":"ru","isPartOf":{"@type":"WebSite","name":"sre-observability","url":"https://y-kolyada.github.io/observability/"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Примеры · Pro","description":"Шесть практических сценариев командного уровня: перцентили p99, W3C TraceContext, Exemplars, поиск N+1 в трейсах, Multi-Burn-Rate и Alertmanager.","url":"https://y-kolyada.github.io/observability/ru/11.html","inLanguage":"ru","isPartOf":{"@type":"WebSite","name":"sre-observability","url":"https://y-kolyada.github.io/observability/"}}</script>
 <!-- /meta -->
 <link rel="stylesheet" href="../assets/style.css?v=1">
 <script>
@@ -94,20 +94,161 @@
 
   <main id="main">
     <h1>Примеры · Pro</h1>
-    <p class="page-size" data-words="51">Слов: 51</p>
-    <p class="lead">Лид страницы: о чём она и кому нужна. Одно предложение, не длиннее 160 знаков.</p>
+    <p class="page-size" data-words="1373">Слов: 1373</p>
+    <p class="lead">Шесть практических сценариев командного уровня: перцентили p99, W3C TraceContext, Exemplars, поиск N+1 в трейсах, Multi-Burn-Rate и Alertmanager.</p>
 
     <div class="box key" id="key-idea">
       <h2>Главная мысль страницы <a class="anchor-link" href="#key-idea" aria-label="ссылка на этот блок">#</a></h2>
-      <p>Текст этого раздела ещё не написан.</p>
+      <p>На уровне Pro инженер решает задачи надежности в масштабе распределенной сервисной архитектуры и команды. Здесь недостаточно убедиться, что отдельный контейнер отвечает по HTTP: необходимо связать разрозненные сигналы в единую аналитическую цепочку. Шесть сценариев ниже посвящены ключевым инженерным практикам профессионала: вычислению реальной задержки пользователей по перцентилям p95/p99, прозрачной передаче контекста распределенной трассировки между сервисами, моментальному переходу от всплеска метрики к трейсу через Exemplars, выявлению скрытых архитектурных дефектов вроде N+1 запросов к БД, внедрению многооконных алертов сгорания бюджета ошибок и подавлению шторма оповещений при авариях.</p>
     </div>
 
-    <h2 id="first">1 · Три сигнала: метрика, лог, трасса <a class="anchor-link" href="#first">#</a></h2>
-    <p>Текст этого раздела ещё не написан.</p>
+    <h2 id="histogram-quantiles">1 · Расчет перцентилей p95 и p99 по гистограмме PromQL histogram_quantile <a class="anchor-link" href="#histogram-quantiles">#</a></h2>
+    <p><strong>Задача:</strong> вычислить реальное время отклика 95-го и 99-го перцентилей для микросервиса обработки платежей по кумулятивным бакетам гистограммы Prometheus с группировкой по типам операций.</p>
+    <pre><code># Запрос PromQL: расчет 99-го перцентиля задержки за последние 5 минут
+histogram_quantile(0.99,
+  sum(rate(http_request_duration_seconds_bucket{service="checkout-service"}[5m])) by (le, handler)
+)</code></pre>
+    <pre><code># Математическая проверка линейной интерполяции внутри бакета:
+# Нижняя граница бакета 0.2с (80 наблюдений), верхняя граница 0.5с (100 наблюдений).
+# Целевое 90-е наблюдение лежит ровно посередине интервала:
+$ python3 -c "b_lower=0.2; b_upper=0.5; count_lower=80; count_upper=100; target=90; \
+p = b_lower + (target - count_lower)/(count_upper - count_lower) * (b_upper - b_lower); \
+print(f'{p:.2f}')"
+0.35</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Сервер Prometheus не хранит сырые значения всех измерений задержки (это потребовало бы колоссальных объемов оперативной памяти), а распределяет их по фиксированным бакетам с меткой <code>le</code> (less than or equal). Функция <code>histogram_quantile()</code> выполняет линейную интерполяцию внутри того бакета, куда попадает расчетный ранг перцентиля. Грубейшая ошибка многих команд - попытка усреднять полученные перцентили между сервисами: квантили математически не аддитивны! Правильный паттерн требует сначала сложить скорость накопления наблюдений в каждом бакете через <code>sum(rate(...)) by (le)</code>, строго сохраняя метку <code>le</code> в группировке, и только затем передавать результирующий вектор в функцию <code>histogram_quantile</code>.</div>
+
+    <h2 id="trace-propagation">2 · Сквозная проброска контекста W3C TraceContext между микросервисами <a class="anchor-link" href="#trace-propagation">#</a></h2>
+    <p><strong>Задача:</strong> при выполнении исходящего HTTP-запроса от сервиса заказов к сервису авторизации корректно передать контекст распределенной трассировки по спецификации W3C TraceContext, сохранив глобальный <code>trace_id</code> и сгенерировав новый дочерний <code>span_id</code>.</p>
+    <pre><code># Входящий контекст в API Gateway:
+# traceparent: 00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01
+
+# Исходящий HTTP-запрос от API Gateway к внутреннему микросервису Auth:
+GET /v1/validate HTTP/1.1
+Host: auth-service.internal:8080
+traceparent: 00-4bf92f3577b34da6a3ce929d0e0e4736-5c3a8d1e2f4b6a7c-01
+tracestate: congo=t61rcWkgMzE,rojo=00f067a</code></pre>
+    <pre><code># Валидация инварианта наследования контекста: trace_id неизменен, span_id уникален
+$ python3 -c "parent_tid = '4bf92f3577b34da6a3ce929d0e0e4736'; parent_sid = '00f067aa0ba902b7'; \
+child_tid = parent_tid; child_sid = '5c3a8d1e2f4b6a7c'; \
+print(child_tid == parent_tid and child_sid != parent_sid)"
+True</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Стандарт W3C TraceContext исключил хаос несовместимых проприетарных заголовков (таких как <code>X-B3-TraceId</code> от Zipkin или <code>X-Ray-Trace-Id</code> от AWS). Заголовок <code>traceparent</code> состоит из четырех строгих позиционных полей, разделенных дефисом: версия спецификации (<code>00</code>), 32-символьный шестнадцатеричный <code>trace_id</code> (единый для всего пути пользовательского запроса от браузера до базы данных), 16-символьный шестнадцатеричный <code>parent_id / span_id</code> (уникальный идентификатор текущего сегмента выполнения) и битовая маска флагов <code>trace_flags</code> (где младший бит <code>01</code> означает, что трейс отобран для записи). Если при вызове downstream-сервиса случайно перегенерировать <code>trace_id</code>, единый граф вызовов распадется на изолированные осколки, уничтожая возможность анализа сквозной задержки.</div>
+
+    <h2 id="exemplars-correlation">3 · Связывание метрик с трейсами через Exemplars в Prometheus и Grafana <a class="anchor-link" href="#exemplars-correlation">#</a></h2>
+    <p><strong>Задача:</strong> настроить связывание агрегированных числовых рядов гистограммы задержек с конкретными распределенными трейсами, позволяя инженеру кликом по выбросу на графике в Grafana мгновенно открыть проблемный трейс в Jaeger или Tempo.</p>
+    <pre><code># Эндпоинт /metrics приложения в расширенном формате OpenMetrics
+# TYPE http_request_duration_seconds histogram
+http_request_duration_seconds_bucket{le="0.1"} 820
+http_request_duration_seconds_bucket{le="0.5"} 980
+http_request_duration_seconds_bucket{le="1.0"} 995 # {trace_id="4bf92f3577b34da6a3ce929d0e0e4736"} 0.842 1700000000.000
+http_request_duration_seconds_bucket{le="+Inf"} 1000
+http_request_duration_seconds_count 1000
+http_request_duration_seconds_sum 142.5</code></pre>
+    <pre><code># Включение поддержки Exemplars в конфигурации сервера Prometheus
+# /etc/prometheus/prometheus.yml
+storage:
+  tsdb:
+    # Хранение экземпляров трассировки в оперативной памяти (по умолчанию включено в Prometheus v2.29+)
+    max_exemplars: 100000</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Exemplars разрешают фундаментальное противоречие между метриками и трейсами. Метрики агрегированы, крайне компактны и дешевы в хранении, но обезличены: на графике p99 виден скачок до 842 мс, но невозможно понять, какой именно клиент пострадал. Трассировки дают исчерпывающую детализацию каждого шага, но хранить 100% трейсов непомерно дорого. Экземпляр прикрепляет метаданные конкретного запроса (идентификатор <code>trace_id</code> и точную длительность) прямо к наблюдению внутри бакета гистограммы без создания нового временного ряда и без риска взрыва кардинальности данных. В Grafana при наведении курсора на точку графика появляется интерактивная синяя метка со ссылкой прямо в UI трассировки.</div>
+
+    <h2 id="detect-n-plus-one">4 · Локализация антипаттерна N+1 и скрытых задержек в графе распределенного трейса <a class="anchor-link" href="#detect-n-plus-one">#</a></h2>
+    <p><strong>Задача:</strong> локализовать причину деградации эндпоинта каталога товаров по графу распределенной трассировки, доказав наличие антипаттерна N+1 запросов к базе данных в коде ORM.</p>
+    <pre><code># Хронология спанов внутри единого родительского запроса GET /api/v1/catalog
+[Parent Span: HTTP GET /api/v1/catalog] ....................................... 1250ms
+  ├── [Span: auth.verify_token] .................... 15ms
+  ├── [Span: db.query "SELECT * FROM categories"] .. 25ms
+  ├── [Span: db.query "SELECT * FROM products WHERE cat_id=1"] .. 20ms
+  ├── [Span: db.query "SELECT * FROM products WHERE cat_id=2"] .. 22ms
+  ├── [Span: db.query "SELECT * FROM products WHERE cat_id=3"] .. 19ms
+  └── ... (еще 47 идентичных последовательных запросов к БД) ..... 980ms</code></pre>
+    <pre><code># Расчет суммарного оверхеда сетевых RTT при последовательном выполнении:
+# 50 запросов со средним временем 20мс дают 1000мс задержки клиента
+$ python3 -c "queries = 50; avg_duration_ms = 20; total_ms = queries * avg_duration_ms; \
+print(f'Суммарная задержка N+1: {total_ms}ms')"
+Суммарная задержка N+1: 1000ms</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Антипаттерн N+1 - классическая ловушка объектно-реляционного отображения (ORM), когда код сначала загружает родительский список сущностей, а затем в цикле выполняет отдельный запрос для каждого связанного элемента. Обычные метрики базы данных здесь бессильны: средняя задержка каждого отдельного запроса составляет всего 20 мс, что СУБД считает образцовой нормой. Однако для конечного пользователя суммарная задержка вырастает до 1 секунды из-за накладных расходов на сетевые пересылки (RTT) и сериализацию данных. Только визуализация графа трейса в виде каскадной диаграммы (waterfall) мгновенно вскрывает характерную «лесенку» последовательных однотипных спанов, указывая точную строку в коде контроллера для замены цикла на пакетную выборку <code>WHERE cat_id IN (...)</code>.</div>
+
+    <h2 id="multi-burn-rate-alert">5 · Настройка Multiwindow Multi-Burn-Rate алерта по стандарту Google SRE <a class="anchor-link" href="#multi-burn-rate-alert">#</a></h2>
+    <p><strong>Задача:</strong> описать надежное правило экстренного оповещения (Critical Paging) в PrometheusRule на основе двухоконного алгоритма Multi-Burn-Rate для SLO доступности 99.9%, реагирующее на сгорание 2% бюджета за 1 час.</p>
+    <pre><code>apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: slo-multi-burn-rate-alert
+  namespace: monitoring
+spec:
+  groups:
+    - name: payment-sli-alerts
+      rules:
+        - alert: ErrorBudgetFastBurn
+          # 14.4x burn-rate сжигает 2% месячного бюджета ошибок за 1 час (при SLO 99.9% порог ошибок = 14.4 * 0.001 = 0.0144)
+          expr: |
+            (
+              sum(rate(http_requests_total{service="checkout",status=~"5.."}[1h]))
+              /
+              sum(rate(http_requests_total{service="checkout"}[1h]))
+              > (14.4 * (1 - 0.999))
+            )
+            and
+            (
+              sum(rate(http_requests_total{service="checkout",status=~"5.."}[5m]))
+              /
+              sum(rate(http_requests_total{service="checkout"}[5m]))
+              > (14.4 * (1 - 0.999))
+            )
+          labels:
+            severity: page
+            slo: "99.9"
+          annotations:
+            summary: "Катастрофическая скорость сгорания бюджета ошибок: burn rate 14.4"
+            description: "Сервис checkout теряет более 2% месячного бюджета ошибок за 1 час. Авария продолжается прямо сейчас."</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Наивный алерт по одиночному скользящему окну страдает от неразрешимой дилеммы. Если взять короткое окно 5 минут, алерт мгновенно сработает на минутный сетевой всплеск и разбудит инженера ложным вызовом. Если взять надежное длинное окно 1 час, алерт продолжит звенеть еще 50 минут после того, как авария уже успешно устранена откатом коммита (так называемый медленный сброс). Двухоконная модель Google SRE решает эту проблему через логическое условие <code>and</code>: длинное окно 1h гарантирует статистическую значимость сгорания бюджета, а короткое окно 5m подтверждает, что авария все еще активна в эту секунду. В момент нормализации сервиса условие пятиминутного окна перестает выполняться, и алерт гаснет мгновенно.</div>
+
+    <h2 id="alertmanager-routing">6 · Маршрутизация и подавление шторма алертов в Alertmanager <a class="anchor-link" href="#alertmanager-routing">#</a></h2>
+    <p><strong>Задача:</strong> настроить конфигурацию Alertmanager для подавления вторичных лавин оповещений от сотен сервисов при выходе из строя физического узла или сетевого сегмента через механизм <code>inhibit_rules</code>.</p>
+    <pre><code># alertmanager.yaml
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by: ['alertname', 'cluster', 'node']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  receiver: 'pagerduty-default'
+  routes:
+    - match:
+        severity: page
+      receiver: 'pagerduty-critical'
+
+inhibit_rules:
+  # Если узел кластера физически упал (NodeDown), глушим все вторичные алерты подов на этом узле
+  - source_match:
+      alertname: 'NodeDown'
+    target_match:
+      alertname: 'InstanceDown'
+    equal: ['node', 'cluster']
+
+  # Если упал сетевой шлюз базы данных, глушим алерты задержек зависимых приложений
+  - source_match:
+      alertname: 'DatabaseClusterUnreachable'
+    target_match_re:
+      alertname: '.*DatabaseConnectionTimeout.*'
+    equal: ['cluster']</code></pre>
+    <div class="prints"><strong>Почему так:</strong> Во время масштабных инфраструктурных аварий дежурные инженеры сталкиваются с явлением шторма алертов (alert storm), когда пейджер вибрирует каждые три секунды, доставляя сотни сообщений от каждого отдельного пода и микросервиса. В этом хаосе невозможно разглядеть первопричину. Блок <code>inhibit_rules</code> реализует семантическое ингибирование: Alertmanager проверяет наличие активного алерта-источника (source) и, если значения указанных в <code>equal</code> меток (например, имя ноды) совпадают с целевыми алертами (target), принудительно подавляет отправку вторичных оповещений. Дежурный получает ровно одно сообщение: «Узел node-42 упал», вместо сорока сообщений о падении размещенных на нем контейнеров.</div>
 
     <div class="box key" id="artifacts">
       <h2>Артефакты: что у вас есть после этой страницы <a class="anchor-link" href="#artifacts">#</a></h2>
-      <p>Текст этого раздела ещё не написан.</p>
+      <p class="artifacts-slogan">Чтение &gt;&gt; Ваш квант времени жизни · Партнерство достоинства вместе с AI · Перестройка вашей нейросети</p>
+      <p>Освоив практические сценарии уровня Pro, вы научились связывать разрозненную телеметрию в сквозную систему командного анализа:</p>
+      <ul>
+        <li><strong>Математика хвоста задержек:</strong> корректный расчет перцентилей p95 и p99 через агрегацию <code>histogram_quantile</code> без опасных усреднений.</li>
+        <li><strong>Сквозной контекст вызовов:</strong> безупречная проброска заголовков W3C TraceContext между микросервисами с соблюдением инварианта уникальности спанов.</li>
+        <li><strong>Бесшовная корреляция:</strong> использование Exemplars для мгновенного перехода от аномалии метрики в панели Grafana прямо к трейсу.</li>
+        <li><strong>Архитектурная диагностика:</strong> обнаружение скрытых узких мест и антипаттерна N+1 по водопадной диаграмме спанов.</li>
+        <li><strong>Промышленный алертинг:</strong> внедрение двухоконных правил Multi-Burn-Rate, исключающих ложные вызовы и долгий сброс.</li>
+        <li><strong>Шумоподавление:</strong> настройка правил ингибирования в Alertmanager для изоляции первопричины при каскадных авариях.</li>
+      </ul>
     </div>
   
 
