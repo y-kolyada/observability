@@ -1,3 +1,10 @@
 # what the site states <TAB> expected output <TAB> command
-# One line per claim. Tabs, not spaces. Example from the reference site:
-# set -e не действует внутри условия	0	bash -c 'set -e; if false; then :; fi; echo 0'
+High Cardinality в метриках порождает 5 000 000 временных рядов при 100k пользователей	5000000	python3 -c "users=100000; status=5; endpoints=10; print(users * status * endpoints)"
+Среднее арифметическое скрывает всплеск p99 задержки в 1000мс для 1% пользователей	19.9 1000	python3 -c "data=[10]*99 + [1000]; mean=sum(data)/len(data); p99=sorted(data)[int(0.99*len(data))]; print(f'{mean:.1f} {p99}')"
+Кумулятивный бакет гистограммы le=100 включает 3 наблюдения из 5	3 5	python3 -c "samples=[5, 25, 80, 150, 400]; le_100=sum(1 for x in samples if x <= 100); total=len(samples); print(f'{le_100} {total}')"
+Функция rate корректно компенсирует сброс счетчика при перезапуске процесса	50	python3 -c "series=[100, 120, 10, 30]; print(sum(b - a if b >= a else b for a, b in zip(series[:-1], series[1:])))"
+Структурированный JSON-лог позволяет извлечь trace_id, http_status и duration_ms	4bf92f3577b34da6a3ce929d0e0e4736 504 5002	echo '{"timestamp":"2026-10-21T10:00:00Z","level":"error","msg":"db timeout","trace_id":"4bf92f3577b34da6a3ce929d0e0e4736","http_status":504,"duration_ms":5002}' | jq -r '"\(.trace_id) \(.http_status) \(.duration_ms)"'
+Заголовок W3C traceparent валидируется по спецификации стандарта	True	python3 -c "import re; tp = '00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01'; m = re.match(r'^00-([0-9a-f]{32})-([0-9a-f]{16})-([0-9a-f]{2})$', tp); print(bool(m and m.group(1) != '0'*32 and m.group(2) != '0'*16))"
+Сумма параллельных дочерних спанов превышает длительность родительского спана	100 130	python3 -c "root=(0, 100); child1=(10, 70); child2=(20, 90); root_dur = root[1]-root[0]; child_sum = (child1[1]-child1[0]) + (child2[1]-child2[0]); print(f'{root_dur} {child_sum}')"
+Экземпляр Exemplar связывает точку гистограммы с конкретным trace_id	4bf92f3577b34da6a3ce929d0e0e4736	python3 -c "bucket = {'le': '0.5', 'count': 42, 'exemplar': {'trace_id': '4bf92f3577b34da6a3ce929d0e0e4736', 'value': 0.48}}; print(bucket['exemplar']['trace_id'])"
+Допустимый месячный бюджет ошибок для 99.9% SLO составляет 43.2 минуты	43.2	python3 -c "total_min = 30 * 24 * 60; slo = 0.999; budget = total_min * (1 - slo); print(f'{budget:.1f}')"
