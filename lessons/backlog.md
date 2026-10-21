@@ -12,19 +12,11 @@ Three fields and not one more. **"Why not now" matters most of the two others:**
 
 ## Lines
 
-- **The plan of fifteen sections.** The navigation titles and the glossary cannot be written until the sections are known. Not now: the plan of sections is the Architect's to approve, and inventing fifteen names while typing the first two pages would fix the shape of the whole site as a side effect of step 1.
-- **The glossary (`ru/glossary.html`).** A reader needs one place for SLI, SLO, error budget, percentile, cardinality. Not now: it follows the plan of sections, because a glossary assembled before the sections duplicates terms the sections will introduce.
-- **English, Ukrainian and German.** Three languages are stubs pointing at the Russian pages. Not now: they follow the acceptance of the Russian original, so a returned page is retyped once instead of four times.
-- **Pages `ru/02.html` ... `ru/15.html`, the three example pages and the question banks.** The site is only useful whole. Not now: step 1 proves the shape of a page and the claim mechanism on two pages, and that proof is cheaper to return than fifteen.
-- **The mechanism that executes PromQL claims (`promtool` or `prometheus` in `docker`).** Any PromQL line on a page has to be run before it is published. Not now: nothing is pulled into the system without the Architect's word, and the first topic can be carried by arithmetic on the Python standard library alone.
-
-## Строки смены 20.10.2026
-
-- **Пятнадцать названий разделов в разметке и в навигаторе.** План принят и записан в `lessons/step-1.md`, но страницы и навигатор всё ещё говорят «Раздел N», и читатель видит метки. Не сейчас: смена ставила планы на четыре сайта, а перенос названий в 68 страниц - это отдельная поставка с пересборкой меты и проверкой, и половина переноса хуже метки.
-- **Текст страниц.** Сайт без текста не сайт. Не сейчас: решение Conductor'а на эту смену - четыре живых скелета с планом дороже одной страницы текста на одном сайте.
-- **Словарь понятий.** Термины подсвечиваются на страницах скриптом `assets/terms.js`, и без словаря подсветка нема. Не сейчас: словарь пишется из терминов написанных страниц, а страниц ещё нет; придуманный заранее словарь придётся переписывать.
-- **Английская, украинская и немецкая версии.** Серия обещает четыре языка. Не сейчас: перевод идёт с принятого русского оригинала, иначе переводится черновик.
-- **Платформа для примеров 10-12.** Панель, SLO и разбор инцидента показываются на чём-то конкретном, а сайт теперь не вендорский. Не сейчас: выбор вендора или локального стенда (Prometheus и Grafana в `docker`) - решение Conductor'а, а до разделов 07-09 примеры не нужны.
-- **`search = SLO` в `site.conf`.** Сейчас стоит `Раздел`: слово дымового теста обязано находиться сегодня. Не сейчас: меняется вместе с первой написанной страницей.
-- **Судьба папки `courses/newrelic`.** Она заштампована до поправки, когда пятым сайтом ещё считался `newrelic`. Не сейчас: удалять её или оставить - решение Conductor'а, и это не решение исполнителя смены.
-
+- **The plan of fifteen sections.** Approved and applied across all 73 pages in commit fffe458.
+- **The glossary (`ru/glossary.html`) and engineering navigator (`ru/navigator.html`).** Needed as transversal synthesis tools. Not now: deferred to Batch 4 (Step 4), because glossary and navigator are populated from concepts introduced throughout chapters 01-12.
+- **English, Ukrainian and German localization.** Three languages are stubs pointing at the Russian pages. Not now: deferred to Batch 5 (Step 5) following final acceptance of the Russian original, avoiding quadruple churn during drafting.
+- **Topics 06-09 (Collection and Reliability Engineering).** Essential for complete operational coverage. Not now: scoped to Batch 2 (Step 2) following completion of baseline signals in Batch 1.
+- **Practical scenarios 10-12 (Noob / Pro / IGL triads).** Hands-on engineering depth. Not now: scoped to Batch 3 (Step 3) following full conceptual coverage of signals and reliability in Batches 1 and 2.
+- **150 Qualification Questions (13-15).** Assessment battery for engineering interviews. Not now: scoped to Batch 4 (Step 4) alongside glossary and navigator.
+- **External heavy runtime containers (Grafana, Jaeger, ClickHouse).** Useful for full-stack integration demos. Not now: claims and examples in Batches 1-3 run via CLI and standard Python/Node tools without network or daemon dependencies.
+- **The fate of `courses/newrelic` directory.** Stamped before vendor-neutral SRE reframing. Not now: decision rests with the Conductor; AI pilots do not delete repository directories without explicit authorization.
