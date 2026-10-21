@@ -708,7 +708,8 @@ nav.contents .nav-extra {
   padding-bottom: 12px;
   border-top: 1px solid var(--line);
 }
-nav.contents .nav-extra a {
+nav.contents .nav-extra > a,
+nav.contents .nav-extra > div > a {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -720,10 +721,12 @@ nav.contents .nav-extra a {
   border: 1px solid transparent;
   border-left: 3px solid transparent;
 }
-nav.contents .nav-extra a:hover {
+nav.contents .nav-extra > a:hover,
+nav.contents .nav-extra > div > a:hover {
   background: var(--code);
 }
-nav.contents .nav-extra a[aria-current="page"] {
+nav.contents .nav-extra > a[aria-current="page"],
+nav.contents .nav-extra > div > a[aria-current="page"] {
   border-color: var(--line);
   border-left: 3px solid var(--term-accent);
   background: var(--code);
@@ -863,7 +866,7 @@ nav.contents > .page-toc {
 .toc-list a.active {
   color: var(--fg);
   font-weight: 600;
-  border-left-color: var(--term-accent);
+  border-left: 3px solid var(--term-accent);
   background: var(--term-bg-hover);
 }
 
