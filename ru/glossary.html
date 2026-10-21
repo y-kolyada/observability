@@ -94,7 +94,7 @@
 
   <main id="main">
     <h1>Словарь понятий</h1>
-    <p class="page-size" data-words="1522">Слов: 1522</p>
+    <p class="page-size" data-words="1529">Слов: 1529</p>
     <p class="lead">Двадцать четыре фундаментальных понятия Observability и SRE, которые на страницах сайта уже не объясняются.</p>
 
     <div class="box key" id="key-idea">
@@ -388,7 +388,7 @@
         <a class="anchor-link" href="#multi-burn-rate">#</a>
       </h2>
       <p class="glossary-lead">Алгоритм SRE-оповещений, требующий синхронного подтверждения аномалии по двум окнам наблюдения.</p>
-      <p>Длинное окно (например, 1 час) подтверждает, что израсходована существенная часть бюджета ошибок. Короткое окно (например, 5 минут) проверяет, что инцидент продолжается прямо сейчас, исключая отправку ложных ночных пейджей на кратковременные всплески.</p>
+      <p>Длинное окно (например, 1 час) подтверждает, что израсходована существенная часть бюджета ошибок. Короткое окно (например, 5 минут) проверяет, что инцидент продолжается прямо сейчас, исключая отправку ложных ночных пейджей на кратковременные всплески и предотвращая <span id="on-call-fatigue">усталость от алертов (Alert Fatigue)</span>.</p>
       <div class="glossary-meta">
         <svg class="icon" data-icon="target" viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7.4"/><circle cx="10" cy="10" r="3.6"/><circle cx="10" cy="10" r="0.7" fill="currentColor"/></svg> <strong>Где встретилось впервые:</strong> <a href="08.html#multi-burn-rate">Тревоги и алерты · Окна выгорания</a>
       </div>
