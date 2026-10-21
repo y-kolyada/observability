@@ -171,6 +171,7 @@
 ## Список коммитов смены
 
 ```text
+8900b28 chore(engine): sync from seed dynamic search sessionStorage key
 12fa558 fix(page): add missing wrap container to en, uk, and de landing pages
 89fe1b9 feat(content): translate showcase landing page to en, uk, and de with 4-lingual search
 55510f7 docs(step): define batch 6 task for multilingual showcase and search
