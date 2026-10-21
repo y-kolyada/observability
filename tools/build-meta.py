@@ -70,7 +70,7 @@ TERM_LEAD = re.compile(r'<p class="glossary-lead">(.*?)</p>', re.S)
 H1 = re.compile(r'<h1[^>]*>(.*?)</h1>', re.S)
 SIZE_BLOCK = re.compile(r'\n?[ \t]*<p class="page-size".*?</p>', re.S)
 PAGER_BLOCK = re.compile(r'\n?[ \t]*<nav class="pager".*?</nav>', re.S)
-FOOTER_BLOCK = re.compile(r'\n?[ \t]*<footer\b[^>]*>.*?</footer>', re.S)
+FOOTER_BLOCK = re.compile(r'\s*<footer\b[^>]*>.*?</footer>', re.S)
 ANCHOR = re.compile(r'<a class="anchor-link".*?</a>', re.S)
 TAG = re.compile(r'<[^>]+>')
 WORD = re.compile(r'[^\W_]', re.UNICODE)
@@ -251,7 +251,7 @@ def rebuild(lang, name, titles):
 
     if pager and '<div class="stub-card">' not in text:
         footer_text = CONF.get('footer') if (CONF.get('footer') and lang == 'ru') else SAY[lang]['footer']
-        footer_html = ('\n    <footer>' + pager + '\n'
+        footer_html = ('\n\n    <footer>' + pager + '\n'
                        '      <p class="footer-note">' + footer_text + '</p>\n    </footer>')
         text = text.replace('</main>', footer_html + '\n  </main>', 1)
 
